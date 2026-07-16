@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, cite the repository release and the exact NHS England publications selected in your source provenance file."
+title: "PCADI — Primary Care Activity Data Integration"
+type: software
+authors:
+  - family-names: "Oluwatimilehin"
+    given-names: "Peter Seyi"
+version: 1.0.1
+date-released: 2026-07-16
+license: MIT
+repository-code: "https://github.com/PeterHDS/pcadi-data-integration"
+url: "https://github.com/PeterHDS/pcadi-data-integration"

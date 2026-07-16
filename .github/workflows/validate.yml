@@ -1,0 +1,51 @@
+name: validate-pcadi-pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  deterministic-validation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Restore release-only reference outputs
+        shell: pwsh
+        run: |
+          $assetName = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
+          $assetUrl = "https://github.com/PeterHDS/pcadi-data-integration/releases/download/v1.0.0/$assetName"
+          $manifest = Import-Csv "reference-release/validation/release_asset_manifest.csv"
+          $assetRecord = $manifest | Where-Object { $_.artifact -eq $assetName }
+          if ($null -eq $assetRecord) {
+            throw "Release asset is missing from the validation manifest."
+          }
+
+          $assetPath = Join-Path $env:RUNNER_TEMP $assetName
+          $extractPath = Join-Path $env:RUNNER_TEMP "pcadi-reference-outputs"
+          Invoke-WebRequest -Uri $assetUrl -OutFile $assetPath
+
+          $observedBytes = (Get-Item -LiteralPath $assetPath).Length
+          $observedHash = (Get-FileHash -LiteralPath $assetPath -Algorithm SHA256).Hash
+          if ($observedBytes -ne [int64]$assetRecord.bytes) {
+            throw "Release asset size mismatch: expected $($assetRecord.bytes), observed $observedBytes."
+          }
+          if ($observedHash -ne $assetRecord.sha256) {
+            throw "Release asset checksum mismatch: expected $($assetRecord.sha256), observed $observedHash."
+          }
+
+          Expand-Archive -LiteralPath $assetPath -DestinationPath $extractPath
+          $releaseOnlyFiles = $manifest |
+            Where-Object { $_.role -eq "contained complete reference CSV" } |
+            Select-Object -ExpandProperty artifact
+          foreach ($filename in $releaseOnlyFiles) {
+            $source = Join-Path $extractPath $filename
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Expected reference output is absent from the release asset: $filename"
+            }
+            Copy-Item -LiteralPath $source -Destination (Join-Path "outputs" $filename)
+          }
+      - name: Run synthetic and reference tests
+        run: python tests/run_tests.py
