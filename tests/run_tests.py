@@ -191,12 +191,14 @@ def main() -> None:
         if "work" not in path.relative_to(ROOT).parts
     ]
     public_text_paths += list((ROOT / "sql" / "portable").glob("*.sql"))
+    public_text_paths.append(ROOT / "CITATION.cff")
     unexplained_design_terms = re.compile(r"\bscenario[_ -]?\d|fatal flaw", re.IGNORECASE)
     local_path = re.compile(r"C:\\Users\\HP", re.IGNORECASE)
     for path in public_text_paths:
         text = path.read_text(encoding="utf-8")
         assert unexplained_design_terms.search(text) is None, f"Unexplained development-only terminology in {path}"
         assert local_path.search(text) is None, f"Local user path in {path}"
+        assert "\u2014" not in text, f"Em dash in public text: {path}"
         assert "\u00e2\u20ac" not in text and "\u00c3" not in text and "\ufffd" not in text, f"Likely text-encoding damage in {path}"
 
     markdown_paths = [

@@ -1,7 +1,12 @@
-# PCADI — Primary Care Activity Data Integration
+# PCADI: Primary Care Activity Data Integration
 
 *A reproducible pipeline for integrating NHS England OCS, GPAD and CBT data
 across configurable observation periods.*
+
+[![Validation](https://github.com/PeterHDS/pcadi-data-integration/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/PeterHDS/pcadi-data-integration/actions/workflows/validate.yml)
+[![Release](https://img.shields.io/github/v/release/PeterHDS/pcadi-data-integration?label=release)](https://github.com/PeterHDS/pcadi-data-integration/releases/latest)
+[![Primary language](https://img.shields.io/github/languages/top/PeterHDS/pcadi-data-integration?label=primary%20language)](sql/README.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 This repository provides a reproducible SQL method for integrating three
 official NHS England data sources at general-practice and reporting-month
@@ -25,6 +30,42 @@ This is an independent academic project, not an NHS England product. OCS
 submissions, GPAD appointments and CBT calls describe different activities.
 Their counts remain separate and are never presented as a combined measure of
 total demand.
+
+## Table of contents
+
+1. [Quick start](#quick-start)
+2. [Questions this repository can support](#questions-this-repository-can-support)
+3. [Choose a route](#choose-a-route)
+4. [Controls applied by the pipeline](#controls-applied-by-the-pipeline)
+5. [Configure an observation period](#configure-an-observation-period)
+6. [Input and output data](#input-and-output-data)
+7. [Choose the output that answers the question](#choose-the-output-that-answers-the-question)
+8. [Read every result in context](#read-every-result-in-context)
+9. [Fixed dissertation reference release](#fixed-dissertation-reference-release)
+10. [Repository map](#repository-map)
+11. [Scope and responsible use](#scope-and-responsible-use)
+12. [Citation](#citation)
+
+## Quick start
+
+On Windows, double-click:
+
+```text
+RUN_DEMO.cmd
+```
+
+The demonstration creates deterministic synthetic data, executes the same
+configurable SQL used for prepared official data and writes a validation report
+under `work/`. No NHS files are required and no clustering is run.
+
+The equivalent command is:
+
+```powershell
+python automation/pipeline_cli.py demo --months 3
+```
+
+Change `--months 3` to any positive number of consecutive months. For a guided
+first review, continue with [START_HERE.md](START_HERE.md).
 
 ## Questions this repository can support
 
@@ -80,25 +121,7 @@ SQL contains the transformations, joins and feature calculations. Python uses
 only the standard library and handles configuration, input checks, CSV
 import/export, checksums and execution order.
 
-## Try it without NHS data
-
-On Windows, double-click:
-
-```text
-RUN_DEMO.cmd
-```
-
-Or run a synthetic demonstration for any period length:
-
-```powershell
-python automation/pipeline_cli.py demo --months 1
-python automation/pipeline_cli.py demo --months 24 --start-month 2024-01
-```
-
-The generated values and practice identifiers are invented. They exercise the
-same configurable SQL used for prepared official data. No clustering is run.
-
-## Configure any observation period
+## Configure an observation period
 
 Create a configuration by giving either an inclusive end month or a number of
 months. These two commands both define March through May 2026:
@@ -140,6 +163,38 @@ python automation/pipeline_cli.py run `
 
 On Windows, `RUN_PIPELINE.cmd` prompts for a start month and number of months.
 It can also receive an existing configuration path as its first argument.
+
+## Input and output data
+
+### Required prepared inputs
+
+The portable pipeline accepts four contract-controlled CSV files:
+
+1. OCS activity at one row per practice and observation month;
+2. GPAD activity at one row per practice and appointment month;
+3. validly mapped CBT activity at one row per practice and observation month;
+   and
+4. source provenance identifying one selected publication owner for every
+   required dataset, component and observation month.
+
+The exact fields and types are defined in [`contracts/sources`](contracts/sources).
+Raw NHS downloads are prepared outside the repository and remain outside Git.
+Use the [official data acquisition guide](docs/get-official-nhs-data/README.md)
+before creating the contract files.
+
+### Main output families
+
+- **Coverage output:** retains every practice-month observed in at least one
+  source and records which sources are present.
+- **Question-specific cohorts:** retain OCS-led, GPAD-led, matched OCS-GPAD,
+  matched three-source or CBT-observed populations.
+- **Annual profiles:** summarise exactly twelve complete eligible months when
+  annual features are explicitly requested.
+- **Validation evidence:** records expected and observed results for period,
+  uniqueness, reconciliation, provenance and row-multiplication checks.
+
+See [`contracts/outputs`](contracts/outputs) for the output interface and
+[`outputs/README.md`](outputs/README.md) for the included reference files.
 
 ## Choose the output that answers the question
 
@@ -200,6 +255,19 @@ To rebuild the primary annual OCS-GPAD matrix from the 21 exact official CSVs,
 place the files at the relative locations listed in
 `reference-release/input_manifest.csv` and run `RUN_REFERENCE_BUILD.cmd`.
 
+## Repository map
+
+| Location | Purpose |
+|---|---|
+| [`sql/portable`](sql/portable) | Configurable SQL for canonical sources, analytical populations, annual profiles, telephony sensitivity and validation |
+| [`sql/core_pipeline`](sql/core_pipeline) | Ordered dissertation reference SQL with detailed validation gates |
+| [`automation`](automation) | Standard-library Python for configuration, CSV handling, checksums and SQL execution order |
+| [`contracts`](contracts) | Machine-readable source requirements and documented output interfaces |
+| [`docs`](docs) | Audience routes, analytical designs, source acquisition, concepts and limitations |
+| [`reference-release`](reference-release) | Fixed April 2025 to March 2026 provenance, reconstruction and validation evidence |
+| [`outputs`](outputs) | Compact validated reference outputs suitable for repository history |
+| [`tests`](tests) | Deterministic tests for configurable periods, reference fingerprints and documentation links |
+
 ## Scope and responsible use
 
 Raw NHS downloads, source archives and SQLite working databases are not stored
@@ -214,3 +282,9 @@ interpretation belong in a separate modelling project.
 Before using the data, read [data availability](DATA_AVAILABILITY.md),
 [official NHS data acquisition](docs/get-official-nhs-data/README.md) and
 [interpretation limitations](docs/limitations/INTERPRETATION.md).
+
+## Citation
+
+Use the repository's [CITATION.cff](CITATION.cff) metadata or the **Cite this
+repository** control on GitHub. A reproducible analysis should also cite the
+exact NHS England publications recorded in its source-provenance file.
