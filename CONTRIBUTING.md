@@ -14,3 +14,12 @@ For a new publication or schema:
 
 Analytical transformations and joins belong in SQL. Orchestration code must not
 silently implement a competing transformation.
+
+## Documentation style
+
+- Use direct, public-facing language that explains purpose before implementation.
+- Prefer colons, commas, parentheses or separate sentences instead of em dashes.
+- Define abbreviations on first use and retain exact table names only where they
+  help a reader run or validate the pipeline.
+- State the retained population, grain and analytical limitation whenever a new
+  output is documented.
