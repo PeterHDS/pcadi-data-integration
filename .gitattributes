@@ -3,4 +3,5 @@
 *.csv text eol=lf
 outputs/practice_temporal_access_sensitivity_features.csv -text -eol
 *.sql text eol=lf
+*.sql linguist-detectable=true
 *.md text eol=lf
