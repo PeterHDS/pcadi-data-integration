@@ -271,6 +271,12 @@ The validated April 2025 to March 2026 release contains:
 - 582 practices explicitly flagged for the documented April 2025 Y60 CBT
   integrity gap.
 
+The complete examiner-ready input for the main national clustering analysis is
+the validated
+[`primary_practice_access_clustering_matrix.csv`](outputs/primary_practice_access_clustering_matrix.csv).
+It is stored in the repository at full precision with the practice identifier
+retained only for traceability.
+
 The included evidence records 26 of 26 release SQL gates, 39 of 39 dependency
 checks and 3 of 3 numerical-matrix checks passing. Run
 `RUN_REFERENCE_VALIDATION.cmd` to recalculate the checksums without the large

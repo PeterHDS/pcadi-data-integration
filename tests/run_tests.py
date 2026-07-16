@@ -213,6 +213,21 @@ def main() -> None:
                 continue
             assert (path.parent / target).resolve().exists(), f"Broken local link in {path}: {target}"
 
+    acquisition_guide = (ROOT / "docs" / "get-official-nhs-data" / "README.md").read_text(encoding="utf-8")
+    for series_path in (
+        "submissions-via-online-consultation-systems-in-general-practice",
+        "appointments-in-general-practice",
+        "cloud-based-telephony-data-in-general-practice",
+        "patients-registered-at-a-gp-practice",
+    ):
+        expected_url = f"https://digital.nhs.uk/data-and-information/publications/statistical/{series_path}"
+        assert expected_url in acquisition_guide, f"Official NHS England release index missing: {expected_url}"
+
+    examiner_guide = (ROOT / "docs" / "audiences" / "examiner-guide.md").read_text(encoding="utf-8")
+    assert "../../outputs/primary_practice_access_clustering_matrix.csv" in examiner_guide
+    assert "97B5EDA02117F14250D712E5F265E465E165725340D415B81178E78931011444" in examiner_guide
+    assert "6,067" in examiner_guide and "13 complete numerical modelling features" in examiner_guide
+
     result = {
         "status": "PASS",
         "one_month_sql_gates": one["validation_passes"],
