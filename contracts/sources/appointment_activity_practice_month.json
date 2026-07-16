@@ -1,0 +1,28 @@
+{
+  "dataset": "GPAD",
+  "filename": "appointment_activity_practice_month.csv",
+  "grain": ["practice_code_standardised", "reporting_month"],
+  "columns": {
+    "practice_code_standardised": {"type": "text", "nullable": false},
+    "reporting_month": {"type": "month", "nullable": false},
+    "total_appointments": {"type": "number", "nullable": true},
+    "attended": {"type": "number", "nullable": true},
+    "dna": {"type": "number", "nullable": true},
+    "status_unknown": {"type": "number", "nullable": true},
+    "face_to_face": {"type": "number", "nullable": true},
+    "telephone": {"type": "number", "nullable": true},
+    "video_online": {"type": "number", "nullable": true},
+    "home_visit": {"type": "number", "nullable": true},
+    "mode_unknown": {"type": "number", "nullable": true},
+    "mode_other": {"type": "number", "nullable": true},
+    "same_day": {"type": "number", "nullable": true},
+    "one_day": {"type": "number", "nullable": true},
+    "two_to_seven_days": {"type": "number", "nullable": true},
+    "eight_to_fourteen_days": {"type": "number", "nullable": true},
+    "fifteen_to_twenty_one_days": {"type": "number", "nullable": true},
+    "twenty_two_to_twenty_eight_days": {"type": "number", "nullable": true},
+    "more_than_twenty_eight_days": {"type": "number", "nullable": true},
+    "booking_unknown": {"type": "number", "nullable": true},
+    "booking_other": {"type": "number", "nullable": true}
+  }
+}

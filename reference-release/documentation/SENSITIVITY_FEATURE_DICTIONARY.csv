@@ -1,0 +1,8 @@
+feature,source,definition,sql_rule,unit,grain,analytical_role,limitation
+cbt_inbound_calls_per_1000_patient_months,CBT,Annual inbound calls normalised by annual patient-month exposure,1000*SUM(cbt_inbound_calls)/SUM(registered_patients),per 1000 registered patient-months,practice annual,sensitivity clustering feature,Recorded calls are not unique callers or appointments
+cbt_mean_absolute_monthly_call_rate_change,CBT,Mean absolute change between adjacent monthly inbound-call rates,AVG(ABS(monthly_rate-prior_rate)),rate change,practice annual,sensitivity clustering feature,Measures variation in recorded activity not access quality
+cbt_call_rate_range,CBT,Maximum minus minimum monthly inbound-call rate,MAX(monthly_rate)-MIN(monthly_rate),rate range,practice annual,sensitivity clustering feature,Sensitive to extreme months
+cbt_answered_share_cbt003,CBT,Answered calls from the waiting-time measure divided by inbound calls,SUM(cbt_answered_wait_measure)/SUM(cbt_inbound_calls),proportion,practice annual,outcomes sensitivity feature,CBT003 may differ from CBT007
+cbt_missed_share,CBT,Missed calls divided by inbound calls,SUM(cbt_missed_calls)/SUM(cbt_inbound_calls),proportion,practice annual,outcomes sensitivity feature,Not a direct measure of unmet clinical need
+cbt_ivr_share,CBT,IVR exits divided by inbound calls,SUM(cbt_ivr_exits)/SUM(cbt_inbound_calls),proportion,practice annual,outcomes sensitivity feature,Represents call-flow behaviour
+cbt_callback_request_share,CBT,Callback requests divided by inbound calls,SUM(cbt_callback_requests)/SUM(cbt_inbound_calls),proportion,practice annual,outcomes sensitivity feature,Does not measure completed callbacks

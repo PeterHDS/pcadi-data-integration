@@ -1,0 +1,15 @@
+{
+  "filename": "source_provenance.csv",
+  "grain": ["dataset", "component", "observation_month", "publication_release_month", "source_filename"],
+  "columns": {
+    "dataset": {"type": "text", "nullable": false},
+    "component": {"type": "text", "nullable": false},
+    "observation_month": {"type": "month", "nullable": false},
+    "publication_release_month": {"type": "month", "nullable": false},
+    "publication_page_url": {"type": "text", "nullable": false},
+    "selected": {"type": "integer", "nullable": false},
+    "source_filename": {"type": "text", "nullable": false},
+    "sha256": {"type": "text", "nullable": false},
+    "notes": {"type": "text", "nullable": true}
+  }
+}

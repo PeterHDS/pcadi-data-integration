@@ -1,0 +1,48 @@
+# Local databases and database sidecars
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+
+# Official source files remain outside Git
+data/raw/
+data/downloads/
+data/prepared/
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Local execution artefacts
+work/
+__pycache__/
+*.pyc
+*.log
+.pytest_cache/
+.coverage
+
+# Local publication-preparation records; useful before the first commit only
+INSPECT_BEFORE_GIT.md
+validation/GITHUB_READINESS.md
+validation/PRE_GIT_PUBLICATION_MANIFEST.csv
+validation/PRE_GIT_READINESS.json
+reference-release/documentation/GITHUB_PUBLICATION_CHECKLIST.md
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large frozen practice-month outputs are prepared as a GitHub Release asset
+outputs/online_consultation_led_appointment_alignment.csv
+outputs/appointment_led_online_consultation_alignment.csv
+outputs/multichannel_practice_month_coverage.csv
+outputs/online_consultation_appointment_complete_cases.csv
+outputs/three_source_complete_cases.csv
+outputs/telephone_matched_online_consultation_appointment_comparison.csv
+outputs/telephone_matched_multichannel_comparison.csv
