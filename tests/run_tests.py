@@ -156,7 +156,7 @@ def main() -> None:
     assert abs(row[1] - totals[2] / totals[0]) < 1e-12
 
     reference_path = test_root / "reference_checks.csv"
-    run("validate-reference", "--output", str(reference_path))
+    run("validate-reference", "--restore-missing", "--output", str(reference_path))
     reference = read_rows(reference_path)
     assert len(reference) == 14
     assert all(row["status"] == "PASS" for row in reference)

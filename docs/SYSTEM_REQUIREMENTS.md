@@ -3,6 +3,11 @@
 The portable demonstration requires Python 3.11 or newer with its standard
 library SQLite module. It has no third-party Python dependency.
 
+The first clean-checkout reference validation also requires internet access to
+download the pinned 36.2 MB release asset. The runner verifies the asset and
+each restored CSV against the published SHA-256 manifest before use. Later
+validations reuse the verified local copy under `work/reference_assets/`.
+
 The frozen full reference build used large official CSVs and working SQLite
 databases. Users should allow substantial temporary disk space, particularly
 for raw GPAD imports and indexes. Runtime depends on storage speed, available

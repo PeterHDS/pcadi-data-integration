@@ -13,6 +13,8 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +22,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
+REFERENCE_ASSET_NAME = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
+REFERENCE_ASSET_URL = (
+    "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
+    f"v1.0.1/{REFERENCE_ASSET_NAME}"
+)
 SQL_FILES = [
     ROOT / "sql" / "portable" / "01_create_canonical_source_tables.sql",
     ROOT / "sql" / "portable" / "02_build_practice_month_designs.sql",
@@ -419,7 +426,84 @@ def validate_downloads(config_path: Path, manifest_path: Path, download_dir: Pat
     return {"manifest_rows": len(rows), "audit_rows": len(audit), "failures": failures, "status": "PASS" if failures == 0 else "FAIL"}
 
 
-def validate_reference(destination: Path) -> dict[str, object]:
+def restore_missing_reference_outputs() -> dict[str, object]:
+    manifest_path = ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
+    with manifest_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+
+    asset = next((row for row in rows if row["artifact"] == REFERENCE_ASSET_NAME), None)
+    if asset is None:
+        raise ValueError(f"Reference asset {REFERENCE_ASSET_NAME} is absent from {manifest_path}")
+    contained = {
+        row["artifact"]: row
+        for row in rows
+        if row["role"] == "contained complete reference CSV"
+    }
+    missing = [name for name in contained if not (ROOT / "outputs" / name).is_file()]
+    if not missing:
+        return {"status": "NOT_NEEDED", "files_restored": 0, "asset_url": REFERENCE_ASSET_URL}
+
+    cache_dir = ROOT / "work" / "reference_assets"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = cache_dir / REFERENCE_ASSET_NAME
+    expected_bytes = int(asset["bytes"])
+    expected_hash = asset["sha256"].upper()
+    archive_valid = (
+        archive_path.is_file()
+        and archive_path.stat().st_size == expected_bytes
+        and sha256(archive_path) == expected_hash
+    )
+    if not archive_valid:
+        temporary_path = archive_path.with_suffix(archive_path.suffix + ".partial")
+        temporary_path.unlink(missing_ok=True)
+        try:
+            request = urllib.request.Request(
+                REFERENCE_ASSET_URL,
+                headers={"User-Agent": "PCADI-reference-validator/1.0"},
+            )
+            with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as handle:
+                shutil.copyfileobj(response, handle, length=1024 * 1024)
+        except (OSError, urllib.error.URLError) as exc:
+            temporary_path.unlink(missing_ok=True)
+            raise RuntimeError(
+                "The release-only reference outputs are missing and the pinned asset could not be downloaded. "
+                f"Check the internet connection or download {REFERENCE_ASSET_URL} manually."
+            ) from exc
+        observed_bytes = temporary_path.stat().st_size
+        observed_hash = sha256(temporary_path)
+        if observed_bytes != expected_bytes or observed_hash != expected_hash:
+            temporary_path.unlink(missing_ok=True)
+            raise ValueError(
+                "Downloaded reference asset failed integrity validation: "
+                f"expected {expected_bytes} bytes and {expected_hash}; "
+                f"observed {observed_bytes} bytes and {observed_hash}"
+            )
+        temporary_path.replace(archive_path)
+
+    restored = 0
+    with zipfile.ZipFile(archive_path) as archive:
+        members = {member.filename: member for member in archive.infolist() if not member.is_dir()}
+        for filename in missing:
+            member = members.get(filename)
+            if member is None:
+                raise ValueError(f"Expected reference output is absent from the verified asset: {filename}")
+            target = ROOT / "outputs" / filename
+            temporary_target = target.with_suffix(target.suffix + ".partial")
+            with archive.open(member) as source, temporary_target.open("wb") as destination:
+                shutil.copyfileobj(source, destination, length=1024 * 1024)
+            expected = contained[filename]
+            observed_bytes = temporary_target.stat().st_size
+            observed_hash = sha256(temporary_target)
+            if observed_bytes != int(expected["bytes"]) or observed_hash != expected["sha256"].upper():
+                temporary_target.unlink(missing_ok=True)
+                raise ValueError(f"Restored reference output failed integrity validation: {filename}")
+            temporary_target.replace(target)
+            restored += 1
+    return {"status": "RESTORED", "files_restored": restored, "asset_url": REFERENCE_ASSET_URL}
+
+
+def validate_reference(destination: Path, restore_missing: bool = False) -> dict[str, object]:
+    restoration = restore_missing_reference_outputs() if restore_missing else None
     manifest_path = ROOT / "validation" / "output_register_and_checksums.csv"
     with manifest_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -434,7 +518,10 @@ def validate_reference(destination: Path) -> dict[str, object]:
         writer.writeheader()
         writer.writerows(checks)
     failures = sum(row["status"] == "FAIL" for row in checks)
-    return {"files_checked": len(checks), "failures": failures, "status": "PASS" if failures == 0 else "FAIL"}
+    result = {"files_checked": len(checks), "failures": failures, "status": "PASS" if failures == 0 else "FAIL"}
+    if restoration is not None:
+        result["restoration"] = restoration
+    return result
 
 
 def main() -> int:
@@ -468,6 +555,11 @@ def main() -> int:
     downloads.add_argument("--allow-synthetic", action="store_true")
     reference = sub.add_parser("validate-reference")
     reference.add_argument("--output", default=ROOT / "work" / "reference_validation.csv", type=Path)
+    reference.add_argument(
+        "--restore-missing",
+        action="store_true",
+        help="Securely restore release-only reference CSVs from the pinned, checksum-verified GitHub asset",
+    )
     args = parser.parse_args()
     if args.command == "run":
         print(json.dumps(run_pipeline(args.config.resolve(), args.input_dir.resolve(), args.output_dir.resolve(), args.database.resolve(), args.overwrite), indent=2))
@@ -497,7 +589,7 @@ def main() -> int:
         print(json.dumps(result, indent=2))
         return 0 if result["failures"] == 0 else 1
     else:
-        result = validate_reference(args.output.resolve())
+        result = validate_reference(args.output.resolve(), args.restore_missing)
         print(json.dumps(result, indent=2))
         return 0 if result["failures"] == 0 else 1
     return 0

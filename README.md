@@ -48,6 +48,21 @@ total demand.
 
 ## Quick start
 
+### 1. Get a local copy
+
+Install [Python 3.11 or newer](https://www.python.org/downloads/). No
+third-party Python packages are required. Then clone the repository:
+
+```powershell
+git clone https://github.com/PeterHDS/pcadi-data-integration.git
+cd pcadi-data-integration
+```
+
+Git is optional. The GitHub **Code** menu can instead be used to download and
+extract the repository ZIP.
+
+### 2. Run the demonstration
+
 On Windows, double-click:
 
 ```text
@@ -56,7 +71,9 @@ RUN_DEMO.cmd
 
 The demonstration creates deterministic synthetic data, executes the same
 configurable SQL used for prepared official data and writes a validation report
-under `work/`. No NHS files are required and no clustering is run.
+to `work/demo_3_months/outputs/run_report.json`. A successful run reports 12
+validation passes and zero failures. No NHS files are required and no
+clustering is run.
 
 The equivalent command is:
 
@@ -66,6 +83,14 @@ python automation/pipeline_cli.py demo --months 3
 
 Change `--months 3` to any positive number of consecutive months. For a guided
 first review, continue with [START_HERE.md](START_HERE.md).
+
+### 3. Verify the published dissertation outputs
+
+Double-click `RUN_REFERENCE_VALIDATION.cmd`. On a clean checkout, it downloads
+the pinned 36.2 MB reference asset, verifies its SHA-256 checksum, restores the
+seven release-only CSVs and validates all fourteen published outputs. Existing
+output files are not overwritten. The result is written to
+`work/reference_validation.csv`.
 
 ## Questions this repository can support
 
