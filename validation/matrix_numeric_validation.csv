@@ -1,0 +1,4 @@
+file,expected_rows,observed_rows,distinct_identifiers,duplicate_identifiers,expected_features,observed_features,missing_values,non_numeric_values,non_finite_values,status
+primary_practice_access_clustering_matrix.csv,6067,6067,6067,0,13,13,0,0,0,PASS
+cbt_inbound_sensitivity_clustering_matrix.csv,3020,3020,3020,0,16,16,0,0,0,PASS
+cbt_outcomes_sensitivity_clustering_matrix.csv,1456,1456,1456,0,20,20,0,0,0,PASS
