@@ -1,9 +1,18 @@
 # GPAD download guide
 
-Open the official *Appointments in General Practice* series and the supporting
-information. For each observation month obtain the practice-level crosstab and
-the relevant mapping/metadata. Category, SDS role and duration files are
-question-dependent and must not be summed as additional appointments.
+Open the official NHS England
+[*Appointments in General Practice* release index](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice)
+and supporting information. Choose a monthly release, then download **Annex 1:
+Practice Level CSV zip** from its **Resources** section. For each observation
+month obtain the required practice-level crosstab and relevant mapping or
+metadata. Category, SDS role and duration files are question-dependent and
+must not be summed as additional appointments.
+
+The [April 2026 GPAD release page](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice/april-2026)
+is one documented source used in the fixed evidence series. The complete
+release ownership across the twelve-month window is recorded in
+`reference-release/manifests/`; it must not be replaced by assuming one
+publication owns every appointment month.
 
 Confirm the appointment month inside the file. Record status, appointment mode,
 national category, healthcare-professional type and time-between-booking bands

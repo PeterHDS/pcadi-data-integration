@@ -4,6 +4,24 @@ Use only official NHS England publication pages and downloadable resources.
 Start by generating a checklist for the configured observation period. The
 checklist is a collection plan, not proof that a local file is correct.
 
+## Official NHS England release pages
+
+Begin from the official monthly release index for each source. Open the release
+covering the required observation period, read its notices, then download the
+named resource from the **Resources** section of that NHS England page.
+
+| Data needed | Official NHS England release index | Resource to select on the release page |
+|---|---|---|
+| Online Consultation Systems (OCS) | [Submissions via Online Consultation Systems in General Practice](https://digital.nhs.uk/data-and-information/publications/statistical/submissions-via-online-consultation-systems-in-general-practice) | **CSV zip** and metadata; add **Day and Time CSV zip** only for temporal analysis |
+| General Practice Appointment Data (GPAD) | [Appointments in General Practice](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice) | **Annex 1: Practice Level CSV zip** and its metadata or mapping evidence |
+| Cloud Based Telephony (CBT) | [Cloud Based Telephony Data in General Practice](https://digital.nhs.uk/data-and-information/publications/statistical/cloud-based-telephony-data-in-general-practice) | **By Day and Time**, participation and submission evidence, and metadata; add **By Durations** only when required |
+| Registered-patient denominator | [Patients Registered at a GP Practice](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice) | **Totals (GP practice-all persons)** for the matching month |
+
+These links lead to the NHS England release indexes, not to a copied file or a
+third-party mirror. A release page contains the official download links,
+publication date, reporting range, notices, metadata and previous-version
+navigation needed for provenance.
+
 Before downloading, use the [source catalogue](../SOURCE_CATALOGUE.md) to
 confirm which source can support the intended question and which grain and
 limitations must be preserved.
