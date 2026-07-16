@@ -9,13 +9,16 @@ Double-click `RUN_REFERENCE_VALIDATION.cmd`, or run:
 
 ```powershell
 python automation/pipeline_cli.py validate-reference `
+  --restore-missing `
   --output work/reference_validation.csv
 ```
 
 This recalculates SHA-256 checksums for the fourteen fixed outputs and compares
 them with `validation/output_register_and_checksums.csv`. It does not require a
-source database. On a fresh clone, first extract the separate practice-month
-release asset into `outputs/` so that all fourteen files are present.
+source database. On a fresh clone, `--restore-missing` downloads the pinned
+36.2 MB release asset, verifies the asset checksum, restores only the seven
+absent practice-month CSVs and verifies every restored file before validation.
+Existing output files are not overwritten.
 
 ## Rebuild the primary annual OCS-GPAD matrix from source CSVs
 

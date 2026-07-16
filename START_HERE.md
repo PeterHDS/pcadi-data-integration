@@ -4,9 +4,13 @@ Choose the route that matches your purpose.
 
 ## See the method run
 
+Install Python 3.11 or newer, then clone the repository or download and extract
+its ZIP. No third-party Python packages are required.
+
 Double-click `RUN_DEMO.cmd`. It creates deterministic synthetic data, executes
 the configurable SQL and writes validation evidence under `work/`. No official
-NHS files are needed.
+NHS files are needed. A successful run reports 12 validation passes and zero
+failures.
 
 ## Integrate a chosen observation period
 
@@ -35,7 +39,10 @@ exactly twelve complete months.
 ## Review the fixed dissertation evidence
 
 Run `RUN_REFERENCE_VALIDATION.cmd`. It verifies the frozen April 2025 to March
-2026 output checksums without rebuilding the large databases. Use
+2026 output checksums without rebuilding the large databases. On a clean
+checkout, the command downloads and verifies the pinned 36.2 MB asset containing
+the seven release-only practice-month CSVs before checking all fourteen outputs.
+Use
 `RUN_REFERENCE_BUILD.cmd` only when the 21 exact source CSVs are available and
 a complete raw-source reconstruction is required.
 

@@ -2,7 +2,8 @@
 setlocal
 cd /d "%~dp0"
 echo Validating the frozen reference outputs against their SHA-256 manifest...
-python automation\pipeline_cli.py validate-reference --output work\reference_validation.csv
+echo Missing release-only outputs will be restored from the pinned, checksum-verified asset.
+python automation\pipeline_cli.py validate-reference --restore-missing --output work\reference_validation.csv
 set EXIT_CODE=%ERRORLEVEL%
 echo.
 if %EXIT_CODE% EQU 0 (
