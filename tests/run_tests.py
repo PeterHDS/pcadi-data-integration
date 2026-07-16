@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic pre-publication tests using no NHS source data."""
+"""Deterministic repository tests using no NHS source data."""
 
 from __future__ import annotations
 
@@ -211,7 +211,6 @@ def main() -> None:
                 continue
             assert (path.parent / target).resolve().exists(), f"Broken local link in {path}: {target}"
 
-    assert not (ROOT / ".git").exists(), "Git must not be initialised before author inspection"
     result = {
         "status": "PASS",
         "one_month_sql_gates": one["validation_passes"],

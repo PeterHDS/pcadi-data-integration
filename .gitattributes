@@ -1,5 +1,6 @@
 * text=auto eol=lf
 *.cmd text eol=crlf
 *.csv text eol=lf
+outputs/practice_temporal_access_sensitivity_features.csv -text -eol
 *.sql text eol=lf
 *.md text eol=lf

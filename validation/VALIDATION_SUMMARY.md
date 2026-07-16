@@ -6,7 +6,7 @@
 - Numerical matrix checks: 3/3 passed
 - Working database integrity: `ok`
 - Clustering run: **No**
-- Git initialised or uploaded: **No**
+- Repository publication changes no analytical values or validation verdicts.
 
 The primary annual matrix contains 6,067 unique practices and exactly thirteen
 complete numerical modelling features plus one traceability identifier. The

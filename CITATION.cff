@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Oluwatimilehin"
     given-names: "Peter Seyi"
-version: 1.0.0
+version: 1.0.1
 date-released: 2026-07-16
 license: MIT
 repository-code: "https://github.com/PeterHDS/pcadi-data-integration"

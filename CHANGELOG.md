@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1 - 2026-07-16
+
+- Restored the seven release-only practice-month outputs during clean-checkout
+  validation after verifying the published ZIP size and SHA-256 checksum.
+- Preserved the validated byte representation of the temporal reference CSV so
+  Git line-ending normalisation cannot change its deterministic fingerprint.
+- Removed the completed pre-publication-only check that prohibited Git metadata
+  from existing inside a published checkout.
+
+No SQL logic, analytical values, cohorts or validated conclusions changed in
+this packaging correction.
+
 ## 1.0.0 - pre-publication candidate
 
 - Added a configurable practice-month SQL pipeline for contiguous periods.
