@@ -21,13 +21,13 @@ FEATURE_COLUMNS = [
     "gpad_face_to_face_share",
     "gpad_telephone_share",
     "gpad_same_day_share",
-    "gpad_1_to_7_days_share",
+    "gpad_1_day_share",
+    "gpad_2_to_7_days_share",
     "gpad_8_to_14_days_share",
     "gpad_over_14_days_share",
     "ocs_mean_absolute_monthly_rate_change",
     "gpad_mean_absolute_monthly_rate_change",
 ]
-
 
 def open_read_only(path: Path) -> sqlite3.Connection:
     connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
@@ -87,7 +87,7 @@ def export_all(
         (
             "primary modelling matrix",
             f"SELECT\n    {matrix_columns}\nFROM primary_practice_access_clustering_matrix_ordered\nORDER BY practice_code_standardised",
-            output_dir / "primary_practice_access_clustering_matrix_2025_04_to_2026_03.csv",
+            output_dir / "primary_practice_access_clustering_matrix.csv",
         ),
         (
             "detailed annual features",
@@ -178,4 +178,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

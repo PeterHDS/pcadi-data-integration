@@ -22,10 +22,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-REFERENCE_ASSET_NAME = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
+REFERENCE_ASSET_NAME = "PCADI_V2_REFERENCE_OUTPUTS.zip"
 REFERENCE_ASSET_URL = (
     "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
-    f"v1.0.1/{REFERENCE_ASSET_NAME}"
+    f"v2.0.0/{REFERENCE_ASSET_NAME}"
 )
 SQL_FILES = [
     ROOT / "sql" / "portable" / "01_create_canonical_source_tables.sql",
@@ -427,7 +427,12 @@ def validate_downloads(config_path: Path, manifest_path: Path, download_dir: Pat
 
 
 def restore_missing_reference_outputs() -> dict[str, object]:
-    manifest_path = ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
+    manifest_path = (
+        ROOT
+        / "reference-release"
+        / "validation"
+        / "release_asset_manifest.csv"
+    )
     with manifest_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
 

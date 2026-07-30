@@ -7,6 +7,7 @@ import csv
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -58,11 +59,22 @@ def is_candidate(path: Path) -> bool:
 
 
 def main() -> None:
-    files = sorted(path for path in ROOT.rglob("*") if path.is_file() and is_candidate(path))
+    listed = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    files = sorted(
+        ROOT / relative
+        for relative in listed
+        if (ROOT / relative).is_file() and is_candidate(ROOT / relative)
+    )
     rows = []
     blockers = []
     text_suffixes = {".md", ".py", ".sql", ".json", ".csv", ".txt", ".yml", ".yaml", ".cmd", ".cff"}
-    local_path_pattern = re.compile(r"C:\\Users\\HP", re.IGNORECASE)
+    local_path_pattern = re.compile(r"C:[/\\]Users[/\\]HP", re.IGNORECASE)
     unexplained_design_pattern = re.compile(r"\bscenario[_ -]?\d|fatal flaw", re.IGNORECASE)
     public_roots = {"README.md", "START_HERE.md"}
 
@@ -86,7 +98,7 @@ def main() -> None:
                 or path.suffix.lower() == ".md"
                 or relative.startswith("docs/")
                 or relative.startswith("sql/portable/")
-            )
+            ) and not relative.startswith(("docs/internal/", "docs/releases/"))
             if public and unexplained_design_pattern.search(text):
                 blockers.append(f"Unexplained development-only terminology in public material: {relative}")
         rows.append({

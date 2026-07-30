@@ -234,7 +234,7 @@ def build_database(arguments: argparse.Namespace) -> dict[str, object]:
                 "SELECT COUNT(*), SUM(result = 'PASS'), SUM(result <> 'PASS') "
                 "FROM pipeline_validation_results"
             ).fetchone()
-            if count != 36 or passes != 36 or failures != 0:
+            if count != 39 or passes != 39 or failures != 0:
                 raise RuntimeError(
                     f"Mandatory validation gate failed: count={count}, PASS={passes}, FAIL={failures}"
                 )

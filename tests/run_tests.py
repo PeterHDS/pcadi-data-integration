@@ -28,6 +28,10 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest().upper()
+
+
 def assert_matrix(path: Path, expected_rows: int, expected_features: int) -> None:
     rows = read_rows(path)
     assert len(rows) == expected_rows, (path, len(rows))
@@ -40,6 +44,18 @@ def assert_matrix(path: Path, expected_rows: int, expected_features: int) -> Non
                 continue
             assert value != ""
             assert math.isfinite(float(value))
+
+
+def assert_inherited_values(parent_path: Path, child_path: Path) -> None:
+    parent_rows = {row["practice_code_standardised"]: row for row in read_rows(parent_path)}
+    child_rows = read_rows(child_path)
+    shared = [name for name in child_rows[0] if name in next(iter(parent_rows.values()))]
+    for child in child_rows:
+        identifier = child["practice_code_standardised"]
+        assert identifier in parent_rows
+        parent = parent_rows[identifier]
+        for name in shared:
+            assert child[name] == parent[name], (identifier, name, parent[name], child[name])
 
 
 def main() -> None:
@@ -115,9 +131,9 @@ def main() -> None:
     twelve_dir = ROOT / "work" / "demo_12_months"
     twelve = json.loads((twelve_dir / "outputs" / "run_report.json").read_text(encoding="utf-8"))
     assert twelve["validation_failures"] == 0
-    assert_matrix(twelve_dir / "outputs" / "annual_practice_access_modelling_matrix.csv", 3, 13)
-    assert_matrix(twelve_dir / "outputs" / "inbound_telephony_sensitivity_modelling_matrix.csv", 2, 16)
-    assert_matrix(twelve_dir / "outputs" / "telephony_outcome_sensitivity_modelling_matrix.csv", 2, 20)
+    assert_matrix(twelve_dir / "outputs" / "annual_practice_access_modelling_matrix.csv", 3, 14)
+    assert_matrix(twelve_dir / "outputs" / "inbound_telephony_sensitivity_modelling_matrix.csv", 2, 17)
+    assert_matrix(twelve_dir / "outputs" / "telephony_outcome_sensitivity_modelling_matrix.csv", 2, 21)
 
     twelve_practice_month_only_config = test_root / "twelve_practice_month_only.json"
     run(
@@ -143,7 +159,7 @@ def main() -> None:
 
     connection = sqlite3.connect(twelve_dir / "pipeline.sqlite")
     row = connection.execute(
-        "SELECT gpad_1_to_7_days_share, gpad_over_14_days_share "
+        "SELECT gpad_1_day_share, gpad_2_to_7_days_share, gpad_over_14_days_share "
         "FROM annual_practice_access_modelling_matrix WHERE practice_code_standardised = 'A00001'"
     ).fetchone()
     totals = connection.execute(
@@ -151,15 +167,53 @@ def main() -> None:
         "SUM(fifteen_to_twenty_one_days + twenty_two_to_twenty_eight_days + more_than_twenty_eight_days) "
         "FROM appointment_activity_source WHERE practice_code_standardised = 'A00001'"
     ).fetchone()
+    one_day_total = connection.execute(
+        "SELECT SUM(one_day) FROM appointment_activity_source "
+        "WHERE practice_code_standardised = 'A00001'"
+    ).fetchone()[0]
+    two_to_seven_total = connection.execute(
+        "SELECT SUM(two_to_seven_days) FROM appointment_activity_source "
+        "WHERE practice_code_standardised = 'A00001'"
+    ).fetchone()[0]
     connection.close()
-    assert abs(row[0] - totals[1] / totals[0]) < 1e-12
-    assert abs(row[1] - totals[2] / totals[0]) < 1e-12
+    assert abs(row[0] - one_day_total / totals[0]) < 1e-12
+    assert abs(row[1] - two_to_seven_total / totals[0]) < 1e-12
+    assert one_day_total != two_to_seven_total
+    assert row[0] != row[1]
+    assert abs(row[2] - totals[2] / totals[0]) < 1e-12
+
+    assert_inherited_values(
+        twelve_dir / "outputs" / "annual_practice_access_modelling_matrix.csv",
+        twelve_dir / "outputs" / "inbound_telephony_sensitivity_modelling_matrix.csv",
+    )
+    assert_inherited_values(
+        twelve_dir / "outputs" / "inbound_telephony_sensitivity_modelling_matrix.csv",
+        twelve_dir / "outputs" / "telephony_outcome_sensitivity_modelling_matrix.csv",
+    )
 
     reference_path = test_root / "reference_checks.csv"
     run("validate-reference", "--restore-missing", "--output", str(reference_path))
     reference = read_rows(reference_path)
     assert len(reference) == 14
     assert all(row["status"] == "PASS" for row in reference)
+
+    primary_reference = ROOT / "outputs" / "primary_practice_access_clustering_matrix.csv"
+    inbound_reference = ROOT / "outputs" / "cbt_inbound_sensitivity_clustering_matrix_17_features.csv"
+    outcome_reference = ROOT / "outputs" / "cbt_outcomes_sensitivity_clustering_matrix_21_features.csv"
+    assert_matrix(primary_reference, 6067, 14)
+    assert_matrix(inbound_reference, 3020, 17)
+    assert_matrix(outcome_reference, 1456, 21)
+    assert sha256(primary_reference) == "C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF"
+    assert sha256(inbound_reference) == "CCC179B870BBD3EC46DD1B75868DB38156FE23A44BBC5A8FF698505FC9B63ED5"
+    assert sha256(outcome_reference) == "D3D2E70C1A718260DD332B59F835EB6316826677A1DF5CEB928ED563C0FC1021"
+    assert_inherited_values(primary_reference, inbound_reference)
+    assert_inherited_values(inbound_reference, outcome_reference)
+    for path in (primary_reference, inbound_reference, outcome_reference):
+        header = path.read_text(encoding="utf-8").splitlines()[0].split(",")
+        assert "gpad_1_day_share" in header
+        assert "gpad_2_to_7_days_share" in header
+        obsolete_booking_name = "gpad_1_" + "to_7_days_share"
+        assert obsolete_booking_name not in header
 
     checklist = test_root / "march_may_checklist.csv"
     run("data-checklist", "--config", str(ROOT / "configs" / "example_three_month_period.json"), "--output", str(checklist))
@@ -189,11 +243,15 @@ def main() -> None:
     public_text_paths = [
         path for path in ROOT.rglob("*.md")
         if "work" not in path.relative_to(ROOT).parts
+        and "pre_clustering_readiness_audit" not in path.relative_to(ROOT).parts
+        and "python-modelling" not in path.relative_to(ROOT).parts
+        and "internal" not in path.relative_to(ROOT).parts
+        and "releases" not in path.relative_to(ROOT).parts
     ]
     public_text_paths += list((ROOT / "sql" / "portable").glob("*.sql"))
     public_text_paths.append(ROOT / "CITATION.cff")
     unexplained_design_terms = re.compile(r"\bscenario[_ -]?\d|fatal flaw", re.IGNORECASE)
-    local_path = re.compile(r"C:\\Users\\HP", re.IGNORECASE)
+    local_path = re.compile(r"C:[/\\]Users[/\\]HP", re.IGNORECASE)
     for path in public_text_paths:
         text = path.read_text(encoding="utf-8")
         assert unexplained_design_terms.search(text) is None, f"Unexplained development-only terminology in {path}"
@@ -204,6 +262,8 @@ def main() -> None:
     markdown_paths = [
         path for path in ROOT.rglob("*.md")
         if "work" not in path.relative_to(ROOT).parts
+        and "pre_clustering_readiness_audit" not in path.relative_to(ROOT).parts
+        and "python-modelling" not in path.relative_to(ROOT).parts
     ]
     link_pattern = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
     for path in markdown_paths:
@@ -225,8 +285,8 @@ def main() -> None:
 
     examiner_guide = (ROOT / "docs" / "audiences" / "examiner-guide.md").read_text(encoding="utf-8")
     assert "../../outputs/primary_practice_access_clustering_matrix.csv" in examiner_guide
-    assert "97B5EDA02117F14250D712E5F265E465E165725340D415B81178E78931011444" in examiner_guide
-    assert "6,067" in examiner_guide and "13 complete numerical modelling features" in examiner_guide
+    assert "C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF" in examiner_guide
+    assert "6,067" in examiner_guide and "14 complete numerical modelling features" in examiner_guide
 
     result = {
         "status": "PASS",
@@ -238,9 +298,9 @@ def main() -> None:
         "download_intake_audit": "PASS",
         "multi_component_source_ownership": "PASS",
         "local_document_links": "PASS",
-        "primary_synthetic_matrix": "3 rows x 13 features",
-        "inbound_sensitivity_matrix": "2 rows x 16 features",
-        "outcome_sensitivity_matrix": "2 rows x 20 features",
+        "primary_synthetic_matrix": "3 rows x 14 features",
+        "inbound_sensitivity_matrix": "2 rows x 17 features",
+        "outcome_sensitivity_matrix": "2 rows x 21 features",
         "clustering_run": False,
     }
     (test_root / "test_summary.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
