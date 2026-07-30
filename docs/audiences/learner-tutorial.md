@@ -1,38 +1,32 @@
 # Learner tutorial
 
-Start with a short run:
+This tutorial uses deterministic synthetic data so the pipeline can be studied
+without NHS downloads.
+
+## Run a three-month example
 
 ```powershell
 python automation/pipeline_cli.py demo --months 3
 ```
 
-The generated fixture contains five invented practice codes. Some appear in
-all sources, while others appear in only OCS, GPAD or CBT. Inspect these tables
-in order:
+On Windows, `RUN_DEMO.cmd` runs the same command. Inspect:
 
-1. `practice_month_union_spine` in the generated SQLite database;
-2. `multichannel_practice_month_coverage.csv`;
-3. `matched_online_and_scheduled_activity.csv`;
-4. `matched_multichannel_activity.csv`;
-5. `pipeline_validation_results.csv`.
+- `work/demo_3_months/inputs/` for contract-shaped source files;
+- `work/demo_3_months/pipeline.sqlite` for intermediate tables;
+- `work/demo_3_months/outputs/` for analytical tables; and
+- `pipeline_validation_results.csv` for the gates.
 
-The coverage table retains every observed practice-month and uses source
-presence flags. The matched tables answer narrower questions and therefore
-retain fewer records. Empty OCS, GPAD or CBT fields are not changed to zero.
+## Follow one key
 
-The number three is only a convenient small example. The same command accepts
-any positive integer, so `--months 1` and `--months 24` exercise one-month and
-twenty-four-month practice panels.
+Choose one practice and month. Compare it across OCS, GPAD, CBT, the union
+spine and a matched output. Notice that:
 
-Then run the twelve-month fixture:
+- source-led views keep the selected source even when another source is absent;
+- the union spine preserves every reported source key;
+- matched views contain only common eligible keys; and
+- missing reporting is not changed to zero.
 
-```powershell
-python automation/pipeline_cli.py demo --months 12
-```
+The [analytical design index](../analytical-designs/README.md) explains why each
+population differs.
 
-Twelve months additionally creates an annual 14-feature matrix because the
-synthetic configuration explicitly enables that product. Compare its booking
-features with the source columns: one-day and two-to-seven-day counts remain
-separate, while the three intervals above fourteen days form the documented
-over-fourteen-day feature. Other period lengths deliberately leave the annual
-tables empty.
+The demo runs no clustering and its values are not NHS observations.

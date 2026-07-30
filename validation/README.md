@@ -9,6 +9,6 @@
 Large source databases are deliberately excluded. Validation relies on complete
 SQL, contracts, manifests, aggregate evidence and deterministic fingerprints.
 
-`repository_release_gate.csv` records the mandatory dissertation-reference
-release checks. `release_file_manifest.csv` fingerprints the final public file
-set without exposing development comparisons or private project history.
+`repository_release_gate.csv` records the mandatory reference-application
+checks. `release_file_manifest.csv` fingerprints the public file set without
+exposing private project history.

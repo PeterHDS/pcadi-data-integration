@@ -1,4 +1,4 @@
-# Dissertation reference validation
+# Reference-application validation
 
 - Overall evidence verdict: **VALIDATED**
 - SQL gates: 26/26 passed

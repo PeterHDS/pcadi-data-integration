@@ -1,6 +1,6 @@
 # Analytical contract and lineage
 
-This document identifies the authoritative dissertation matrices and the
+This document identifies the authoritative reference matrices and the
 dependency path that produces them.
 
 ## Authoritative matrices

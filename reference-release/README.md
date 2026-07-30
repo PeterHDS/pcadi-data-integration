@@ -1,49 +1,40 @@
-# April 2025-March 2026 reference release
+# April 2025 to March 2026 reference evidence
 
-This directory preserves the dissertation observation window as a worked,
-validated example of the configurable pipeline. Publication vintages may be
-later than the observation months they own.
+This directory preserves the verified observation window as a worked example
+of the configurable PCADI pipeline. Publication vintages may be later than the
+observation months they own.
 
 ## Evidence
 
 - `manifests/primary_annual_raw_input_manifest.csv` identifies the 21 exact OCS,
   GPAD and organisational-reference inputs for the independently reproduced
-  annual core, including checksums, schemas and row counts.
-- `manifests/selected_release_manifest.csv` records the wider imported source
-  members and their selection decisions.
-- `manifests/source_month_ownership.csv` proves one selected owner per required
+  annual core.
+- `manifests/selected_release_manifest.csv` records imported source members and
+  selection decisions.
+- `manifests/source_month_ownership.csv` records one selected owner per required
   component-month.
 - `manifests/source_month_matrix.csv` summarises twelve-month coverage.
-- `manifests/temporal_official_download_manifest.csv` retains the official OCS
-  day/time resource URLs and checksums used for the temporal analysis.
-- `validation/reference_output_manifest.csv` fingerprints all 14 derived outputs.
-- `documentation/` contains the reference feature dictionaries, lineage,
-  cohort rules and academic methods text.
+- `manifests/temporal_official_download_manifest.csv` records official OCS
+  day/time resources used for the supplementary temporal analysis.
+- `validation/reference_output_manifest.csv` fingerprints all 14 derived
+  outputs.
+- `documentation/` contains feature dictionaries, lineage, cohort rules and
+  reproduction guidance.
 
-The evidence has two defined scopes. The source-month ownership and matrix
-files describe the main practice-month integration and record that OCS
-day/time data were outside that input set. The temporal download manifest and
-temporal output checksum separately describe the supplementary day/time
-analysis. Keeping the scopes separate prevents a temporal resource from being
-mistaken for an input to the main practice-month build.
+The source-month ownership and matrix manifests describe the main
+practice-month integration. The temporal manifest and temporal output checksum
+describe the supplementary day/time analysis separately.
 
-No raw downloads, archives or SQLite databases are included. The main
-repository outputs can be validated from their checksums without rebuilding the
-large databases. A complete rebuild additionally requires the exact official
-files listed in the manifests.
+No raw downloads, archives or SQLite databases are included. A full rebuild
+requires the exact official files listed in the manifests.
 
-The fourteen complete reference CSVs are packaged as the v1.0.0 dissertation
-reference release asset `PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip`. The archive
-includes the seven large
-practice-month tables omitted from Git history and the seven smaller annual,
-modelling and temporal outputs tracked in the repository. The asset and every
-contained file have locked checksums in
-`validation/release_asset_manifest.csv`. After v1.0.0 is published, the
-reference validator can restore missing files without overwriting files that
-are already present.
+The 14 complete reference CSVs are packaged in
+`PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip`. The archive contains the seven
+large practice-month tables omitted from Git history and the seven smaller
+annual, modelling and temporal outputs tracked in the repository. The archive
+and every member are locked in `validation/release_asset_manifest.csv`.
 
-During pull-request review, clean-clone validation can restore only the seven
-practice-month files from the temporary published reference archive. That
-fallback is permitted only when every missing filename, byte count and SHA-256
-checksum exactly matches the dissertation reference manifest. The three annual
-matrices remain tracked in Git and are never supplied by the fallback archive.
+On a clean checkout, the reference validator downloads the period-labelled
+asset, checks its name, byte size and SHA-256 fingerprint, supports its
+`outputs/<filename>` member layout, restores only absent outputs and validates
+every CSV. Existing output files are not overwritten.

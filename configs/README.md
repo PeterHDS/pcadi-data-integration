@@ -27,7 +27,7 @@ practice.
 Included examples:
 
 - `example_three_month_period.json` demonstrates a short custom panel;
-- `dissertation_reference_2025_04_to_2026_03.json` preserves the fixed academic
-  reference period; and
+- `reference_apr2025_mar2026.json` preserves the verified reference
+  application period; and
 - `rolling_twelve_month_period.json` is a runnable twelve-month example. Prefer
   `make-config` to create the exact window required for a new analysis.

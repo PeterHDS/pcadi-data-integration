@@ -1,42 +1,49 @@
-# Technical reviewer overview
+# Technical reviewer guide
 
-The architecture uses a narrow orchestration layer and an authoritative SQL
-transformation layer. JSON contracts control CSV headers and types. A provenance
-table enforces one selected release per dataset-component-observation-month.
-Each source reaches practice-month grain independently before a union spine is
-constructed.
+Use this route to inspect contracts, SQL order, cardinality, deterministic
+outputs and release-asset verification.
 
-Key engineering controls include:
+## Controls
 
-- read-before-write source validation;
-- deterministic imports and exports;
-- primary and unique keys at asserted grains;
-- explicit expected and observed validation evidence;
-- source-family reconciliation;
-- row-multiplication checks;
-- schema-drift failure rather than guessed mappings;
-- ignored work databases and source downloads;
-- synthetic CI with no external data dependency;
-- frozen reference checksums.
+| Control | Evidence |
+|---|---|
+| Prepared-source schemas | [`contracts/sources`](../../contracts/sources) |
+| SQL stage order | [`sql/portable`](../../sql/portable) and [`sql/core_pipeline`](../../sql/core_pipeline) |
+| Join grain and retained populations | [Analytical design index](../analytical-designs/README.md) |
+| Source-month ownership | [`reference-release/manifests`](../../reference-release/manifests) |
+| Output schemas and fingerprints | [`validation/authoritative_output_manifest.csv`](../../validation/authoritative_output_manifest.csv) |
+| Numerical and cohort integrity | [`validation/matrix_numeric_validation.csv`](../../validation/matrix_numeric_validation.csv) |
+| Join and release gates | [`validation/repository_release_gate.csv`](../../validation/repository_release_gate.csv) |
 
-The release-level contract gates assert:
+## Run deterministic tests
 
-- 6,067 rows by 15 total columns for the national matrix;
-- 3,020 rows by 18 total columns for the CBT inbound matrix;
-- 1,456 rows by 22 total columns for the raw CBT outcome matrix;
-- exact column order and deterministic practice ordering;
-- no blank, duplicate, missing, non-numeric or non-finite values;
-- valid share and non-negative rate ranges;
-- exact cohort nesting;
-- exact fourteen-field inheritance into the inbound matrix;
-- exact seventeen-field inheritance into the outcome matrix.
+```powershell
+python tests/run_tests.py
+```
 
-The Python runner uses only the standard library. The executable SQL targets
-SQLite; the analytical design is portable but dialect changes are required for
-other database engines.
+The suite covers one, three, twelve and twenty-four months, source ownership,
+booking-delay separation, annual eligibility, cohort nesting, inherited parent
+values, local documentation links and all registered reference outputs.
 
-Use the
-[analytical contract and lineage](../audits/ANALYTICAL_CONTRACT_AND_LINEAGE.md)
-and
-[`validation/repository_release_gate.csv`](../../validation/repository_release_gate.csv)
-for release review.
+## Verify the reference asset
+
+```powershell
+python automation/pipeline_cli.py validate-reference `
+  --restore-missing `
+  --output work/reference_validation.csv
+```
+
+The verifier requires the exact asset name, byte size and SHA-256 fingerprint,
+supports the verified `outputs/<filename>` archive layout, and validates each
+restored CSV. It rejects an incorrect or unavailable asset.
+
+## Authoritative matrix fingerprints
+
+| Matrix | SHA-256 |
+|---|---|
+| National annual OCS-GPAD | `C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF` |
+| CBT inbound restricted cohort | `CCC179B870BBD3EC46DD1B75868DB38156FE23A44BBC5A8FF698505FC9B63ED5` |
+| CBT outcome-complete restricted cohort | `D3D2E70C1A718260DD332B59F835EB6316826677A1DF5CEB928ED563C0FC1021` |
+
+The practice identifier remains attached for traceability and is excluded from
+the numerical feature count.

@@ -1,7 +1,6 @@
-# Reproduce the fixed April 2025 to March 2026 release
+# Reproduce the April 2025 to March 2026 reference application
 
-There are two levels of review. Choose the one supported by the files available
-to you.
+There are two review levels. Choose the one supported by the available files.
 
 ## Validate the published derived outputs
 
@@ -13,22 +12,15 @@ python automation/pipeline_cli.py validate-reference `
   --output work/reference_validation.csv
 ```
 
-This recalculates SHA-256 checksums for the fourteen fixed outputs and compares
-them with `validation/output_register_and_checksums.csv`. It does not require a
-source database. On a fresh clone of v1.0.0, `--restore-missing` downloads the
-pinned `PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip` asset, verifies its
-40,656,898-byte
-archive and SHA-256 checksum, retrieves only absent reference CSVs and verifies
-every retrieved file before validation. Existing output files are not
-overwritten.
+The command checks 14 outputs against
+`validation/output_register_and_checksums.csv`. It does not require a source
+database. On a clean checkout, `--restore-missing` downloads
+`PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip` from the
+`reference-apr2025-mar2026` release, verifies its 40,656,898-byte size and
+SHA-256 checksum, retrieves only absent `outputs/<filename>` members, and
+verifies every restored CSV. Existing output files are not overwritten.
 
-During review, before the dissertation reference asset exists, the same command
-may obtain the seven practice-month outputs from the temporary published
-reference archive. The fallback is accepted only if each filename, byte count
-and SHA-256 checksum matches the dissertation reference manifest. It cannot
-restore or replace the three annual modelling matrices.
-
-## Rebuild the primary annual OCS-GPAD matrix from source CSVs
+## Rebuild the primary annual OCS-GPAD matrix
 
 Obtain the exact 21 official CSVs listed in
 `reference-release/input_manifest.csv`. Place each file at its
@@ -42,21 +34,17 @@ The runner:
 3. executes the twelve ordered SQL stages in `sql/core_pipeline/`;
 4. runs 39 mandatory validations plus database integrity checks; and
 5. compares all 6,067 canonical feature fingerprints with the expected
-   fingerprint evidence.
+   evidence.
 
 The build writes under `work/reference-build/`, which is excluded from Git. It
-does not modify the fixed CSVs in `outputs/`.
+does not modify the frozen CSVs in `outputs/`.
 
-## What this rebuild proves
+## Scope
 
-The full raw-source build independently reconstructs the primary annual
-OCS-GPAD analytical matrix. The wider fixed release also contains CBT
-sensitivity and temporal outputs whose complete SQL, manifests and checksums
-are retained as separate evidence. Rebuilding those products requires their
-own official source files and is not silently substituted by the OCS-GPAD
-rebuild.
-
-## Analytical boundaries
+The full source build independently reconstructs the primary annual OCS-GPAD
+matrix. The reference application also contains CBT sensitivity and temporal
+outputs whose SQL, manifests and checksums are retained separately. Rebuilding
+those outputs requires their own official source files.
 
 - The practice identifier is retained for traceability and is not a feature.
 - OCS, GPAD and CBT activity counts are never added together.

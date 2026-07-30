@@ -10,7 +10,7 @@ observation month, file checksum and selection decision must be retained in
 month; the pipeline therefore requires exactly one selected vintage for each
 dataset-component-month.
 
-The dissertation reference release contains derived aggregate practice-level
+The included reference application contains derived aggregate practice-level
 outputs and checksums, not patient-level information. Users remain responsible
-for the source publication terms, the Open Government Licence where applicable,
+for source publication terms, the Open Government Licence where applicable,
 institutional policy and appropriate interpretation.

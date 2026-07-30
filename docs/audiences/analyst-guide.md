@@ -1,57 +1,43 @@
-# Analyst guide
+# NHS and ICB analyst guide
 
-## 1. Begin with the question
+Use this route to construct a practice-month dataset for a selected period and
+choose an output whose retained population matches the analytical question.
 
-Check the [source catalogue](../SOURCE_CATALOGUE.md), then choose the
-[analytical design](../analytical-designs/README.md). Broad coverage,
-matched-source comparison and annual profiles retain different populations and
-are not interchangeable. The [join guide](../HOW_THE_JOINS_WORK.md) states the
-grain, key and retained population before each output is built.
+## 1. Define the period
 
-## 2. Configure the observation period
+Read the [period configuration guide](../PERIOD_CONFIGURATION.md). PCADI accepts
+any positive number of consecutive months when compatible official source
+files are available. Annual matrices require exactly twelve complete eligible
+months.
 
-Generate a configuration with `make-config`. Supply a start month and either an
-inclusive end month or a positive number of consecutive months. Dates mean
-observation months, not publication months.
+## 2. Obtain and record sources
 
-```powershell
-python automation/pipeline_cli.py make-config `
-  --start 2024-01 --months 24 `
-  --output configs/my_period.json
-```
+Use the [official NHS data guide](../get-official-nhs-data/README.md). Record:
 
-Practice-month tables accept any period length. Add `--annual-features` only
-when an exactly twelve-month annual profile is required.
+- publication page and direct resource URL;
+- publication date and observation month;
+- selected archive member;
+- file size and checksum; and
+- one selected owner for each dataset-component-month.
 
-## 3. Obtain official data
+## 3. Prepare contract-controlled inputs
 
-Run `data-checklist`, follow the [official NHS data
-guide](../get-official-nhs-data/README.md), and retain the CSV/ZIP, metadata and
-supporting information. Record the publication page, observation months,
-member path and checksum. Do not rely on the filename alone.
+Create the four CSVs defined in [`contracts/sources`](../../contracts/sources).
+Do not convert absent reporting to zero. Validate practice codes and reduce
+each activity source to one row per practice-month before integration.
 
-## 4. Establish vintage ownership
+## 4. Run and select an output
 
-Create `source_provenance.csv`. Exactly one selected publication vintage must
-own each required dataset-component-observation-month. If the evidence is
-ambiguous, stop rather than append overlapping releases.
+Run `RUN_PIPELINE.cmd` with the selected configuration. Then use the
+[analytical design index](../analytical-designs/README.md) to choose a
+coverage, matched or annual output.
 
-## 5. Prepare source-contract tables
+Review `pipeline_validation_results.csv`. Do not use an output when a mandatory
+gate fails.
 
-Create the three CSVs defined in `contracts/sources/`. They must each contain at
-most one row per practice-month. Source-specific aggregation must precede the
-multichannel join.
+## Interpretation
 
-## 6. Run and review
-
-Run the pipeline. Do not use an output if any validation row fails. Absence of a
-source row is not zero activity. A configuration of any length produces
-practice-month outputs; the optional annual product requires exactly twelve
-complete months and an explicit request in the configuration.
-
-For the fixed dissertation release, compare the generated interface with the
-[output contract](../../contracts/outputs/README.md) and the
-[machine-readable join gate](../../validation/join_design_gate.csv).
-The national annual modelling table contains one traceability identifier and
-fourteen numerical features. The CBT restricted cohorts inherit those fourteen
-values unchanged.
+OCS submissions, GPAD appointments and CBT calls are distinct recorded
+activities. Rates normalise activity by documented registered-patient
+denominators. They do not measure total demand or patient journeys. Profiles
+should not be interpreted as performance rankings.

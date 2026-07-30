@@ -1,66 +1,50 @@
-# Examiner guide
+# Examiner and academic reviewer guide
 
-Begin with the question-to-output map in
-`docs/analytical-designs/README.md`. It states the retained population, grain,
-appropriate use and limitation before any result is reviewed.
+This guide explains how the April 2025 to March 2026 reference application
+supports inspection of the associated academic work. PCADI itself is a
+reusable analytical pipeline.
 
-## Fastest review
+## Short inspection route
 
-Double-click `RUN_DEMO.cmd`. The command uses deterministic synthetic data,
-executes the same portable SQL used for custom periods and creates
-`work/demo_3_months/outputs/run_report.json` plus an evidence table containing
-the test, expected result, observed result, status and interpretation.
+1. Read the [research context](../research-context.md).
+2. Review the [verified reference application](../reference-applications/apr2025-mar2026.md).
+3. Inspect the [analytical contract and lineage](../audits/ANALYTICAL_CONTRACT_AND_LINEAGE.md).
+4. Open the
+   [national annual matrix](../../outputs/primary_practice_access_clustering_matrix.csv).
+5. Run `RUN_REFERENCE_VALIDATION.cmd`.
 
-Three months is used only to keep the first review small. The configurable
-practice-month pipeline accepts any positive number of consecutive months. The
-fixed twelve-month dissertation release is reviewed separately below.
+The national matrix contains 6,067 practices, one traceability identifier and
+14 complete numerical modelling features. The identifier must be excluded from
+the numerical feature matrix. The GPAD booking-delay features retain separate
+same-day, 1-day, 2-to-7-day, 8-to-14-day and over-14-day shares.
 
-Then run `RUN_REFERENCE_VALIDATION.cmd`. It independently recalculates SHA-256
-checksums for the 14 frozen reference outputs without requiring the large source
-databases.
+## What the validation establishes
 
-## Primary dissertation modelling input
+The compact check confirms:
 
-The examiner-ready input for the main national clustering analysis is:
+- all 14 registered reference outputs are present or restored from the verified
+  period-labelled release asset;
+- file size, schema, row count and checksum match the technical register;
+- every annual matrix has one unique practice identifier per row;
+- modelling values are complete, numeric and finite;
+- the 3,020-practice CBT inbound cohort is nested inside the 6,067-practice
+  matrix;
+- the 1,456-practice CBT outcome-complete cohort is nested inside both; and
+- shared parent values are inherited exactly.
 
-**[`primary_practice_access_clustering_matrix.csv`](../../outputs/primary_practice_access_clustering_matrix.csv)**
+Complete fingerprints are in the
+[authoritative output manifest](../../validation/authoritative_output_manifest.csv).
 
-[Download the complete CSV](https://raw.githubusercontent.com/PeterHDS/pcadi-data-integration/main/outputs/primary_practice_access_clustering_matrix.csv)
+## Full reconstruction
 
-This is the authoritative full-precision file included in the repository. It
-contains:
+`RUN_REFERENCE_BUILD.cmd` recreates the source-to-output integration only when
+the 21 exact selected source CSVs are available. Raw NHS downloads and the
+large working database are not stored in Git. The
+[reproduction guide](../../reference-release/documentation/REPRODUCTION_GUIDE.md)
+states the required inputs and sequence.
 
-- 6,067 rows, with exactly one row per practice;
-- one standardised practice identifier retained for traceability;
-- 14 complete numerical modelling features;
-- zero duplicate or blank identifiers;
-- zero missing, non-numeric or non-finite modelling values; and
-- separate GPAD 1-day and 2-to-7-day shares;
-- SHA-256 `C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF`.
+## Boundary
 
-The practice identifier is not a modelling feature. The CBT matrices are
-smaller sensitivity-analysis cohorts and do not replace this primary national
-matrix. The file is the validated input to clustering, not a clustering result,
-and its values must not be replaced by a rounded display export.
-
-The dimensions and numerical checks are recorded in
-[`matrix_numeric_validation.csv`](../../validation/matrix_numeric_validation.csv),
-and the deterministic file fingerprint is recorded in
-[`output_register_and_checksums.csv`](../../validation/output_register_and_checksums.csv).
-
-## What establishes reproducibility
-
-- complete ordered SQL in `sql/portable/` and `sql/core_pipeline/`;
-- exact source and output contracts;
-- a selected-vintage row for every source observation month;
-- source-specific aggregation before joins;
-- explicit join cardinality and reconciliation gates;
-- deterministic output ordering and checksums;
-- a synthetic clean-room run independent of the dissertation files;
-- a frozen April 2025-March 2026 evidence release.
-
-Clustering is deliberately outside this repository.
-
-The [cohort-flow figure](../architecture/COHORT_FLOW.md) distinguishes the
-6,067-practice national population from the 3,020 and 1,456-practice CBT
-evidence-availability cohorts.
+The repository validates data integration. It does not rerun downstream
+clustering or establish demand, access quality, safety, equity, value or
+patient outcomes.

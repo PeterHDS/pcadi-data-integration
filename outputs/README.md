@@ -1,7 +1,7 @@
 # Frozen reference outputs
 
-These CSVs belong to the validated April 2025 to March 2026 dissertation
-release. Names describe the population or role, not access quality.
+These CSVs belong to the verified April 2025 to March 2026 reference
+application. Names describe the population or role, not access quality.
 
 ## Authoritative modelling matrices
 
@@ -24,6 +24,6 @@ Run `RUN_REFERENCE_VALIDATION.cmd` from the repository root to verify them.
 Detailed annual tables retain counts, denominator evidence, reconciliation
 fields and audit-only derivatives. The temporal table preserves the April 2025
 Y60 CBT integrity flag. Large practice-month outputs are retrieved from the
-pinned release asset when reference validation runs on a clean checkout.
+period-labelled release asset when reference validation runs on a clean checkout.
 
 No clustering results are stored here.

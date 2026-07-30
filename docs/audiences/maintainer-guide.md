@@ -1,34 +1,37 @@
 # Maintainer guide
 
-## Adding a publication
+Changes must preserve the distinction between reusable pipeline behaviour and
+frozen reference outputs.
 
-Do not overwrite an earlier release definition. Record the publication page,
-resource URL, retrieval date, observation months, checksum, archive members and
-metadata. Add selected and non-selected candidates to the provenance evidence.
+## Source updates
 
-## Handling schema changes
+1. Add or revise a source contract.
+2. Record publication vintage and observation-month ownership.
+3. Update the source catalogue and official acquisition guide.
+4. Add a deterministic synthetic fixture for the new field or rule.
+5. Validate source grain before joining.
 
-If a header fails its JSON contract, compare the new official metadata with the
-previous definition. Add a versioned adapter or contract and a synthetic test.
-Do not add an alias solely because two columns have similar names.
+## Analytical changes
 
-## Release gates
+Document the question, retained population, grain, join keys, output and
+limitation in the [analytical design index](../analytical-designs/README.md).
+Do not silently rename stable machine-facing outputs.
+
+## Regression controls
 
 Run:
 
 ```powershell
-python automation/pipeline_cli.py demo --months 3
-python automation/pipeline_cli.py demo --months 12
-python automation/pipeline_cli.py demo --months 24 --start-month 2024-01
-python automation/pipeline_cli.py validate-reference --restore-missing --output work/reference_validation.csv
+python -m compileall automation tests reference-release/automation
 python tests/run_tests.py
-python automation/prepare_publication_manifest.py
 ```
 
-Review the publication manifest before Git. A new software release that changes
-an output formula requires a documented data-contract version change.
+If reference outputs are intentionally changed, update the analytical contract,
+source evidence and technical manifests together. Do not refresh a checksum to
+hide an unexplained difference.
 
-When reference outputs change, run
-`python automation/refresh_reference_metadata.py`. Build the planned release
-archive with `python automation/build_reference_release_asset.py`, then verify the
-archive hash in `reference-release/validation/release_asset_manifest.csv`.
+## Visual assets
+
+Run `python automation/generate_public_visuals.py` after installing the optional
+visual dependency. The script generates matched SVG and PNG architecture,
+cohort-flow and social-preview assets from one source.
