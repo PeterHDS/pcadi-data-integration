@@ -15,17 +15,18 @@ python automation/pipeline_cli.py validate-reference `
 
 This recalculates SHA-256 checksums for the fourteen fixed outputs and compares
 them with `validation/output_register_and_checksums.csv`. It does not require a
-source database. On a fresh clone of v2.0.0, `--restore-missing` downloads the
-pinned `PCADI_V2_REFERENCE_OUTPUTS.zip` asset, verifies its 40,656,898-byte
-archive and SHA-256 checksum, restores only absent reference CSVs and verifies
-every restored file before validation. Existing output files are not
+source database. On a fresh clone of v1.0.0, `--restore-missing` downloads the
+pinned `PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip` asset, verifies its
+40,656,898-byte
+archive and SHA-256 checksum, retrieves only absent reference CSVs and verifies
+every retrieved file before validation. Existing output files are not
 overwritten.
 
-During review, before the v2.0.0 asset exists, the same command may obtain the
-seven unchanged practice-month outputs from the published v1.0.1 archive. The
-fallback is accepted only if each filename, byte count and SHA-256 checksum
-matches the current v2 manifest. It cannot restore or replace the corrected
-annual modelling matrices.
+During review, before the dissertation reference asset exists, the same command
+may obtain the seven practice-month outputs from the temporary published
+reference archive. The fallback is accepted only if each filename, byte count
+and SHA-256 checksum matches the dissertation reference manifest. It cannot
+restore or replace the three annual modelling matrices.
 
 ## Rebuild the primary annual OCS-GPAD matrix from source CSVs
 

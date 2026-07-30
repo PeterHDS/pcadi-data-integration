@@ -23,7 +23,7 @@ Run `RUN_REFERENCE_VALIDATION.cmd` from the repository root to verify them.
 
 Detailed annual tables retain counts, denominator evidence, reconciliation
 fields and audit-only derivatives. The temporal table preserves the April 2025
-Y60 CBT integrity flag. Large practice-month outputs are restored from the
+Y60 CBT integrity flag. Large practice-month outputs are retrieved from the
 pinned release asset when reference validation runs on a clean checkout.
 
 No clustering results are stored here.

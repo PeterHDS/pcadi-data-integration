@@ -35,7 +35,8 @@ The Python runner uses only the standard library. The executable SQL targets
 SQLite; the analytical design is portable but dialect changes are required for
 other database engines.
 
-Use the [source-of-truth audit](../audits/PCADI_V2_SOURCE_OF_TRUTH.md),
-[dependency graph](../audits/PCADI_V2_DEPENDENCY_GRAPH.md) and
-[`validation/pcadi_v2_repository_rebuild_gate.csv`](../../validation/pcadi_v2_repository_rebuild_gate.csv)
+Use the
+[analytical contract and lineage](../audits/ANALYTICAL_CONTRACT_AND_LINEAGE.md)
+and
+[`validation/repository_release_gate.csv`](../../validation/repository_release_gate.csv)
 for release review.

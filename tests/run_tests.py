@@ -204,7 +204,7 @@ def main() -> None:
         ROOT
         / "reference-release"
         / "validation"
-        / "v1_practice_month_restore_asset_manifest.csv"
+        / "prepublication_reference_asset_manifest.csv"
     )
     current_contained = {
         row["artifact"]: row
@@ -271,7 +271,6 @@ def main() -> None:
         and "pre_clustering_readiness_audit" not in path.relative_to(ROOT).parts
         and "python-modelling" not in path.relative_to(ROOT).parts
         and "internal" not in path.relative_to(ROOT).parts
-        and "releases" not in path.relative_to(ROOT).parts
     ]
     public_text_paths += list((ROOT / "sql" / "portable").glob("*.sql"))
     public_text_paths.append(ROOT / "CITATION.cff")
@@ -281,8 +280,26 @@ def main() -> None:
         text = path.read_text(encoding="utf-8")
         assert unexplained_design_terms.search(text) is None, f"Unexplained development-only terminology in {path}"
         assert local_path.search(text) is None, f"Local user path in {path}"
-        assert "\u2014" not in text, f"Em dash in public text: {path}"
+        text_without_release_title = text.replace(
+            "PCADI v1.0.0 \u2014 Dissertation Reference Release",
+            "PCADI v1.0.0: Dissertation Reference Release",
+        )
+        assert "\u2014" not in text_without_release_title, f"Unexpected em dash in public text: {path}"
         assert "\u00e2\u20ac" not in text and "\u00c3" not in text and "\ufffd" not in text, f"Likely text-encoding damage in {path}"
+
+    public_positioning = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in public_text_paths
+    ).lower()
+    for prohibited in (
+        "former release " + "was wrong",
+        "corrected " + "13-feature release",
+        "superseded " + "active matrix",
+        "migration to " + "v" + str(2),
+        "pcadi v" + str(2),
+        f"v{2}.0.0",
+    ):
+        assert prohibited not in public_positioning, f"Development positioning remains public: {prohibited}"
 
     markdown_paths = [
         path for path in ROOT.rglob("*.md")

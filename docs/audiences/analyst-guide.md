@@ -51,7 +51,7 @@ complete months and an explicit request in the configuration.
 
 For the fixed dissertation release, compare the generated interface with the
 [output contract](../../contracts/outputs/README.md) and the
-[machine-readable join gate](../../validation/pcadi_v2_join_design_gate.csv).
+[machine-readable join gate](../../validation/join_design_gate.csv).
 The national annual modelling table contains one traceability identifier and
 fourteen numerical features. The CBT restricted cohorts inherit those fourteen
 values unchanged.

@@ -30,5 +30,5 @@ an output formula requires a documented data-contract version change.
 
 When reference outputs change, run
 `python automation/refresh_reference_metadata.py`. Build the planned release
-archive with `python automation/build_v2_release_asset.py`, then verify the
+archive with `python automation/build_reference_release_asset.py`, then verify the
 archive hash in `reference-release/validation/release_asset_manifest.csv`.

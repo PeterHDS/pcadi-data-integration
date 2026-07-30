@@ -40,8 +40,8 @@ exactly twelve complete months.
 
 Run `RUN_REFERENCE_VALIDATION.cmd`. It verifies the frozen April 2025 to March
 2026 output checksums without rebuilding the large databases. On a clean
-checkout, the command downloads and verifies the pinned 36.2 MB asset containing
-the seven release-only practice-month CSVs before checking all fourteen outputs.
+checkout of v1.0.0, the command downloads and verifies the pinned 40.7 MB
+dissertation reference archive before checking all fourteen outputs.
 Use
 `RUN_REFERENCE_BUILD.cmd` only when the 21 exact source CSVs are available and
 a complete raw-source reconstruction is required.

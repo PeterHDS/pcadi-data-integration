@@ -98,7 +98,7 @@ def main() -> None:
                 or path.suffix.lower() == ".md"
                 or relative.startswith("docs/")
                 or relative.startswith("sql/portable/")
-            ) and not relative.startswith(("docs/internal/", "docs/releases/"))
+            ) and not relative.startswith("docs/internal/")
             if public and unexplained_design_pattern.search(text):
                 blockers.append(f"Unexplained development-only terminology in public material: {relative}")
         rows.append({

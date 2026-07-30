@@ -9,6 +9,6 @@
 Large source databases are deliberately excluded. Validation relies on complete
 SQL, contracts, manifests, aggregate evidence and deterministic fingerprints.
 
-Local pre-publication scans are generated before the first commit but are not
-part of the published validation evidence because their Git-status statements
-become stale as soon as the repository is created.
+`repository_release_gate.csv` records the mandatory dissertation-reference
+release checks. `release_file_manifest.csv` fingerprints the final public file
+set without exposing development comparisons or private project history.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh deterministic PCADI v2 reference manifests from validated outputs."""
+"""Refresh deterministic dissertation reference manifests from validated outputs."""
 
 from __future__ import annotations
 
@@ -209,7 +209,7 @@ def main() -> None:
         output_rows,
     )
     write_csv(
-        ROOT / "validation" / "pcadi_v2_authoritative_output_manifest.csv",
+        ROOT / "validation" / "authoritative_output_manifest.csv",
         fields,
         output_rows,
     )
@@ -249,49 +249,6 @@ def main() -> None:
         fingerprint_rows,
     )
 
-    superseded = [
-        {
-            "old_filename": "primary_practice_access_clustering_matrix.csv",
-            "old_sha256": "97B5EDA02117F14250D712E5F265E465E165725340D415B81178E78931011444",
-            "old_rows": 6067,
-            "old_columns": 14,
-            "superseded_date": "2026-07-30",
-            "replacement_file": "primary_practice_access_clustering_matrix.csv",
-            "replacement_sha256": MATRIX_CONTRACTS[0][4],
-            "reason": "The old interface combined the GPAD 1-day and 2-to-7-day source bands.",
-        },
-        {
-            "old_filename": "cbt_inbound_sensitivity_clustering_matrix.csv",
-            "old_sha256": "09DDF224A4D38410A1912163C1449F83DAFAA80984BA12C37B5E96BBF3333263",
-            "old_rows": 3020,
-            "old_columns": 17,
-            "superseded_date": "2026-07-30",
-            "replacement_file": MATRIX_CONTRACTS[1][0],
-            "replacement_sha256": MATRIX_CONTRACTS[1][4],
-            "reason": "The inherited core interface now retains both exact booking bands.",
-        },
-        {
-            "old_filename": "cbt_outcomes_sensitivity_clustering_matrix.csv",
-            "old_sha256": "822D9764863E94E2146C2B3970CA8963A38C92DEC675C58C798E7692CD5EB8C6",
-            "old_rows": 1456,
-            "old_columns": 21,
-            "superseded_date": "2026-07-30",
-            "replacement_file": MATRIX_CONTRACTS[2][0],
-            "replacement_sha256": MATRIX_CONTRACTS[2][4],
-            "reason": "The inherited core interface now retains both exact booking bands.",
-        },
-    ]
-    superseded_fields = list(superseded[0])
-    write_csv(
-        ROOT / "reference-release" / "validation" / "superseded_output_register.csv",
-        superseded_fields,
-        superseded,
-    )
-    write_csv(
-        ROOT / "validation" / "pcadi_v2_superseded_output_register.csv",
-        superseded_fields,
-        superseded,
-    )
     print(f"Refreshed {len(output_rows)} output records and {len(matrix_rows)} matrix gates.")
 
 

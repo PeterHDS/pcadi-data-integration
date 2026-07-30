@@ -22,15 +22,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-REFERENCE_ASSET_NAME = "PCADI_V2_REFERENCE_OUTPUTS.zip"
+REFERENCE_ASSET_NAME = "PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip"
 REFERENCE_ASSET_URL = (
     "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
-    f"v2.0.0/{REFERENCE_ASSET_NAME}"
+    f"v1.0.0/{REFERENCE_ASSET_NAME}"
 )
 PRE_RELEASE_FALLBACK_ASSET_NAME = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
 PRE_RELEASE_FALLBACK_ASSET_URL = (
-    "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
-    f"v1.0.1/{PRE_RELEASE_FALLBACK_ASSET_NAME}"
+    "https://github.com/PeterHDS/pcadi-data-integration/releases/latest/download/"
+    f"{PRE_RELEASE_FALLBACK_ASSET_NAME}"
 )
 SQL_FILES = [
     ROOT / "sql" / "portable" / "01_create_canonical_source_tables.sql",
@@ -486,12 +486,12 @@ def download_verified_asset(
     return archive_path
 
 
-def restore_outputs_from_asset(
+def retrieve_outputs_from_asset(
     archive_path: Path,
     missing: list[str],
     current_manifest: dict[str, dict[str, str]],
 ) -> int:
-    restored = 0
+    retrieved = 0
     with zipfile.ZipFile(archive_path) as archive:
         members = {member.filename: member for member in archive.infolist() if not member.is_dir()}
         for filename in missing:
@@ -507,13 +507,13 @@ def restore_outputs_from_asset(
             observed_hash = sha256(temporary_target)
             if observed_bytes != int(expected["bytes"]) or observed_hash != expected["sha256"].upper():
                 temporary_target.unlink(missing_ok=True)
-                raise ValueError(f"Restored reference output failed current-version validation: {filename}")
+                raise ValueError(f"Retrieved reference output failed release validation: {filename}")
             temporary_target.replace(target)
-            restored += 1
-    return restored
+            retrieved += 1
+    return retrieved
 
 
-def restore_missing_reference_outputs() -> dict[str, object]:
+def retrieve_missing_reference_outputs() -> dict[str, object]:
     manifest_path = ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
     rows, contained = read_asset_manifest(manifest_path)
     asset = next((row for row in rows if row["artifact"] == REFERENCE_ASSET_NAME), None)
@@ -521,23 +521,23 @@ def restore_missing_reference_outputs() -> dict[str, object]:
         raise ValueError(f"Reference asset {REFERENCE_ASSET_NAME} is absent from {manifest_path}")
     missing = [name for name in contained if not (ROOT / "outputs" / name).is_file()]
     if not missing:
-        return {"status": "NOT_NEEDED", "files_restored": 0, "asset_url": REFERENCE_ASSET_URL}
+        return {"status": "NOT_NEEDED", "files_retrieved": 0, "asset_url": REFERENCE_ASSET_URL}
 
     try:
         archive_path = download_verified_asset(REFERENCE_ASSET_NAME, REFERENCE_ASSET_URL, asset)
-        restored = restore_outputs_from_asset(archive_path, missing, contained)
+        retrieved = retrieve_outputs_from_asset(archive_path, missing, contained)
         return {
-            "status": "RESTORED",
-            "files_restored": restored,
+            "status": "RETRIEVED",
+            "files_retrieved": retrieved,
             "asset_url": REFERENCE_ASSET_URL,
-            "restore_route": "current release asset",
+            "retrieval_route": "current release asset",
         }
     except RuntimeError as primary_error:
         fallback_manifest_path = (
             ROOT
             / "reference-release"
             / "validation"
-            / "v1_practice_month_restore_asset_manifest.csv"
+            / "prepublication_reference_asset_manifest.csv"
         )
         fallback_rows, fallback_contained = read_asset_manifest(fallback_manifest_path)
         fallback_asset = next(
@@ -580,17 +580,17 @@ def restore_missing_reference_outputs() -> dict[str, object]:
                 f"be downloaded. Current asset: {REFERENCE_ASSET_URL}. "
                 f"Pre-release fallback: {PRE_RELEASE_FALLBACK_ASSET_URL}."
             ) from fallback_error
-        restored = restore_outputs_from_asset(fallback_archive, missing, contained)
+        retrieved = retrieve_outputs_from_asset(fallback_archive, missing, contained)
         return {
-            "status": "RESTORED",
-            "files_restored": restored,
+            "status": "RETRIEVED",
+            "files_retrieved": retrieved,
             "asset_url": PRE_RELEASE_FALLBACK_ASSET_URL,
-            "restore_route": "checksum-equivalent pre-release practice-month fallback",
+            "retrieval_route": "checksum-equivalent pre-release practice-month fallback",
         }
 
 
 def validate_reference(destination: Path, restore_missing: bool = False) -> dict[str, object]:
-    restoration = restore_missing_reference_outputs() if restore_missing else None
+    retrieval = retrieve_missing_reference_outputs() if restore_missing else None
     manifest_path = ROOT / "validation" / "output_register_and_checksums.csv"
     with manifest_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -606,8 +606,8 @@ def validate_reference(destination: Path, restore_missing: bool = False) -> dict
         writer.writerows(checks)
     failures = sum(row["status"] == "FAIL" for row in checks)
     result = {"files_checked": len(checks), "failures": failures, "status": "PASS" if failures == 0 else "FAIL"}
-    if restoration is not None:
-        result["restoration"] = restoration
+    if retrieval is not None:
+        result["retrieval"] = retrieval
     return result
 
 

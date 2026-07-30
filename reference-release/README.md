@@ -32,17 +32,18 @@ repository outputs can be validated from their checksums without rebuilding the
 large databases. A complete rebuild additionally requires the exact official
 files listed in the manifests.
 
-The fourteen complete reference CSVs are packaged as the v2.0.0 GitHub Release
-asset `PCADI_V2_REFERENCE_OUTPUTS.zip`. The archive includes the seven large
+The fourteen complete reference CSVs are packaged as the v1.0.0 dissertation
+reference release asset `PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip`. The archive
+includes the seven large
 practice-month tables omitted from Git history and the seven smaller annual,
 modelling and temporal outputs tracked in the repository. The asset and every
 contained file have locked checksums in
-`validation/release_asset_manifest.csv`. After v2.0.0 is published, the
+`validation/release_asset_manifest.csv`. After v1.0.0 is published, the
 reference validator can restore missing files without overwriting files that
 are already present.
 
-Before v2.0.0 is published, clean-clone validation can restore only the seven
-unchanged practice-month files from the existing v1.0.1 archive. That fallback
-is permitted only when every missing filename, byte count and SHA-256 checksum
-exactly matches the current v2 manifest. The corrected annual matrices remain
-tracked in Git and are never supplied by the fallback archive.
+During pull-request review, clean-clone validation can restore only the seven
+practice-month files from the temporary published reference archive. That
+fallback is permitted only when every missing filename, byte count and SHA-256
+checksum exactly matches the dissertation reference manifest. The three annual
+matrices remain tracked in Git and are never supplied by the fallback archive.

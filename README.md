@@ -4,6 +4,7 @@
 data across configurable observation periods.*
 
 [![Validation](https://github.com/PeterHDS/pcadi-data-integration/actions/workflows/validate.yml/badge.svg)](https://github.com/PeterHDS/pcadi-data-integration/actions/workflows/validate.yml)
+[![Dissertation release: v1.0.0](https://img.shields.io/badge/dissertation%20release-v1.0.0-24557a.svg)](docs/releases/v1.0.0.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Primary language: SQL](https://img.shields.io/badge/primary%20language-SQL-blue.svg)](sql/README.md)
 
@@ -120,9 +121,10 @@ machine-readable contracts in [`contracts/sources`](contracts/sources) before
 preparing data. The annual feature branch must be requested explicitly and
 requires exactly twelve complete months.
 
-## Fixed dissertation reference release
+## PCADI v1.0.0 dissertation reference release
 
-The April 2025 to March 2026 release contains three locked modelling matrices:
+The April 2025 to March 2026 dissertation reference release contains three
+locked modelling matrices:
 
 | Matrix | Practices | Numerical features | SHA-256 |
 |---|---:|---:|---|
