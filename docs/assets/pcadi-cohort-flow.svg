@@ -1,47 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
-  <title id="title">PCADI annual cohort flow</title>
-  <desc id="desc">Annual OCS and GPAD practices are assessed for completeness. Six thousand one hundred and thirty pass source and denominator rules, sixty-three are excluded by the final activity rule, six thousand sixty-seven enter the national matrix, three thousand twenty have complete CBT inbound evidence, and one thousand four hundred fifty-six have complete CBT outcome evidence.</desc>
-  <style>
-    .box { fill: #f7fbff; stroke: #174a7e; stroke-width: 2; rx: 14; }
-    .core { fill: #eef8f1; stroke: #26734d; stroke-width: 3; rx: 14; }
-    .restricted { fill: #fff8e8; stroke: #9a6812; stroke-width: 2; rx: 14; }
-    .text { font: 600 19px Arial, sans-serif; fill: #16202a; text-anchor: middle; }
-    .small { font: 15px Arial, sans-serif; fill: #344454; text-anchor: middle; }
-    .arrow { stroke: #52677a; stroke-width: 3; fill: none; marker-end: url(#head); }
-  </style>
-  <defs>
-    <marker id="head" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L9,3 z" fill="#52677a"/>
-    </marker>
-  </defs>
-  <rect width="1100" height="520" fill="#ffffff"/>
-  <rect class="box" x="45" y="45" width="250" height="100"/>
-  <text class="text" x="170" y="82">6,210 annual OCS</text>
-  <text class="small" x="170" y="113">observed practices</text>
-  <rect class="box" x="45" y="185" width="250" height="100"/>
-  <text class="text" x="170" y="222">6,184 annual GPAD</text>
-  <text class="small" x="170" y="253">observed practices</text>
-
-  <rect class="box" x="375" y="115" width="270" height="110"/>
-  <text class="text" x="510" y="155">6,130 eligible practices</text>
-  <text class="small" x="510" y="185">complete sources and denominators</text>
-
-  <rect class="core" x="730" y="115" width="300" height="110"/>
-  <text class="text" x="880" y="155">6,067 national profiles</text>
-  <text class="small" x="880" y="185">14 numerical features</text>
-
-  <rect class="restricted" x="730" y="285" width="300" height="90"/>
-  <text class="text" x="880" y="322">3,020 CBT inbound</text>
-  <text class="small" x="880" y="350">17 numerical features</text>
-
-  <rect class="restricted" x="730" y="415" width="300" height="90"/>
-  <text class="text" x="880" y="452">1,456 CBT outcomes</text>
-  <text class="small" x="880" y="480">21 raw numerical features</text>
-
-  <path class="arrow" d="M295 95 C335 95 335 145 375 145"/>
-  <path class="arrow" d="M295 235 C335 235 335 195 375 195"/>
-  <path class="arrow" d="M645 170 H730"/>
-  <text class="small" x="688" y="151">63 final-rule exclusions</text>
-  <path class="arrow" d="M880 225 V285"/>
-  <path class="arrow" d="M880 375 V415"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="930" viewBox="0 0 1400 930" role="img" aria-labelledby="title description">
+<title id="title">April 2025 to March 2026 reference cohorts</title>
+<desc id="description">Annual OCS-GPAD eligibility with nested CBT evidence availability</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#1F6F8B"/></marker>
+</defs>
+<rect width="1400" height="930" fill="#F7FAFC"/>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700" fill="#123047"><tspan x="700.0" y="70.0">April 2025 to March 2026 reference cohorts</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="400" fill="#52646F"><tspan x="700.0" y="116.0">Annual OCS-GPAD eligibility with nested CBT evidence availability</tspan></text>
+<line x1="700" y1="237" x2="700" y2="290" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="700" y1="750" x2="700" y2="800" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="160" y="145" width="1080" height="92" rx="18" fill="#E8F1F5" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700.0" y="200.8">Validated OCS and GPAD practice-month reporting</tspan></text>
+<rect x="230" y="290" width="940" height="460" rx="24" fill="#DDF3EE" stroke="#2A9D8F" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="700" fill="#123047"><tspan x="700.0" y="530.9"></tspan></text>
+<rect x="330" y="420" width="740" height="260" rx="24" fill="#E8F1F5" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700.0" y="559.8"></tspan></text>
+<rect x="450" y="535" width="500" height="105" rx="22" fill="#FFF2D6" stroke="#E5A73C" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#1D2A32"><tspan x="700.0" y="580.8">1,456 practices with complete</tspan><tspan x="700.0" y="611.8">supported CBT outcomes</tspan></text>
+<rect x="255" y="800" width="890" height="82" rx="18" fill="#123047" stroke="#123047" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#FFFFFF"><tspan x="700.0" y="834.2">Nested evidence-availability cohorts</tspan><tspan x="700.0" y="865.2">Smaller cohorts are not sequential quality grades</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="700" fill="#123047"><tspan x="700" y="340.0">6,067 practices in the national annual matrix</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="400" fill="#52646F"><tspan x="700" y="382.0">12 complete eligible matched months</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700" y="490.0">3,020 practices with valid CBT inbound evidence</tspan></text>
 </svg>

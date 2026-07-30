@@ -1,15 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
-  <title id="title">PCADI repository social preview</title>
-  <desc id="desc">Primary Care Activity Data Integration, a reproducible pipeline for NHS England OCS, GPAD and CBT data.</desc>
-  <rect width="1280" height="640" fill="#0d2f4f"/>
-  <rect x="70" y="70" width="1140" height="500" rx="28" fill="#f7fbff"/>
-  <text x="120" y="220" font-family="Arial, sans-serif" font-weight="700" font-size="92" fill="#174a7e">PCADI</text>
-  <text x="120" y="300" font-family="Arial, sans-serif" font-weight="600" font-size="42" fill="#16202a">Primary Care Activity Data Integration</text>
-  <text x="120" y="380" font-family="Arial, sans-serif" font-size="30" fill="#344454">Reproducible SQL for NHS England OCS, GPAD and CBT data</text>
-  <rect x="120" y="440" width="260" height="58" rx="12" fill="#26734d"/>
-  <text x="250" y="479" text-anchor="middle" font-family="Arial, sans-serif" font-weight="600" font-size="25" fill="#ffffff">Validated contracts</text>
-  <rect x="405" y="440" width="240" height="58" rx="12" fill="#174a7e"/>
-  <text x="525" y="479" text-anchor="middle" font-family="Arial, sans-serif" font-weight="600" font-size="25" fill="#ffffff">Configurable periods</text>
-  <rect x="670" y="440" width="260" height="58" rx="12" fill="#9a6812"/>
-  <text x="800" y="479" text-anchor="middle" font-family="Arial, sans-serif" font-weight="600" font-size="25" fill="#ffffff">Deterministic outputs</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">PCADI social preview</title>
+  <desc id="description">Primary Care Activity Data Integration for OCS, GPAD, CBT and registered-patient data.</desc>
+  <rect width="1280" height="640" fill="#123047"/>
+  <rect x="68" y="62" width="1144" height="516" rx="36" fill="#163B54" stroke="#2A9D8F" stroke-width="3"/>
+  <rect x="68" y="62" width="20" height="516" fill="#2A9D8F"/>
+  <text x="145" y="205" font-family="Segoe UI, Arial, sans-serif" font-size="88" font-weight="700" fill="#FFFFFF">PCADI</text>
+  <text x="150" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="#DDF3EE">Primary Care Activity Data Integration</text>
+  <text x="150" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#FFFFFF">OCS + GPAD + CBT + registered-patient data</text>
+  <line x1="150" y1="400" x2="1125" y2="400" stroke="#5CA6B4" stroke-width="2"/>
+  <text x="150" y="480" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#DDF3EE">Practice-month integration | Auditable joins | Reusable periods</text>
 </svg>

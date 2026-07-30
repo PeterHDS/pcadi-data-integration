@@ -4,9 +4,10 @@ The portable demonstration requires Python 3.11 or newer with its standard
 library SQLite module. It has no third-party Python dependency.
 
 The first clean-checkout reference validation also requires internet access to
-download the pinned 40.7 MB dissertation reference asset. The runner verifies
-the asset and each retrieved CSV against the published SHA-256 manifest before use. Later
-validations reuse the verified local copy under `work/reference_assets/`.
+download the period-labelled 40.7 MB reference asset. The runner verifies the
+asset and each retrieved CSV against the published SHA-256 manifest before use.
+Later validations reuse the verified local copy under
+`work/reference_assets/`.
 
 The frozen full reference build used large official CSVs and working SQLite
 databases. Users should allow substantial temporary disk space, particularly

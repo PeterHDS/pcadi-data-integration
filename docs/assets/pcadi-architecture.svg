@@ -1,51 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
-  <title id="title">PCADI pipeline architecture</title>
-  <desc id="desc">Official NHS England releases pass through source contracts, practice-month validation, a union coverage spine, question-specific joins, annual matrices, and downstream analysis.</desc>
-  <style>
-    .box { fill: #f7fbff; stroke: #174a7e; stroke-width: 2; rx: 12; }
-    .annual { fill: #eef8f1; stroke: #26734d; stroke-width: 2; rx: 12; }
-    .text { font: 600 18px Arial, sans-serif; fill: #16202a; text-anchor: middle; }
-    .small { font: 15px Arial, sans-serif; fill: #344454; text-anchor: middle; }
-    .arrow { stroke: #52677a; stroke-width: 3; fill: none; marker-end: url(#head); }
-  </style>
-  <defs>
-    <marker id="head" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L9,3 z" fill="#52677a"/>
-    </marker>
-  </defs>
-  <rect width="1200" height="480" fill="#ffffff"/>
-  <rect class="box" x="35" y="165" width="160" height="115"/>
-  <text class="text" x="115" y="205"><tspan x="115">Official NHS</tspan><tspan x="115" dy="24">releases</tspan></text>
-  <text class="small" x="115" y="258">OCS, GPAD, CBT</text>
-
-  <rect class="box" x="235" y="165" width="170" height="115"/>
-  <text class="text" x="320" y="205"><tspan x="320">Prepared source</tspan><tspan x="320" dy="24">contracts</tspan></text>
-  <text class="small" x="320" y="258">schema + provenance</text>
-
-  <rect class="box" x="445" y="165" width="175" height="115"/>
-  <text class="text" x="532" y="205"><tspan x="532">Validated</tspan><tspan x="532" dy="24">practice-months</tspan></text>
-  <text class="small" x="532" y="258">one row per key</text>
-
-  <rect class="box" x="660" y="165" width="165" height="115"/>
-  <text class="text" x="742" y="205"><tspan x="742">Union coverage</tspan><tspan x="742" dy="24">spine</tspan></text>
-  <text class="small" x="742" y="258">presence retained</text>
-
-  <rect class="box" x="865" y="60" width="285" height="105"/>
-  <text class="text" x="1007" y="100">Question-specific joins</text>
-  <text class="small" x="1007" y="130">source-led and matched populations</text>
-
-  <rect class="annual" x="865" y="195" width="285" height="105"/>
-  <text class="text" x="1007" y="235">Annual matrices</text>
-  <text class="small" x="1007" y="265">14 core, 17 inbound, 21 outcomes</text>
-
-  <rect class="box" x="865" y="330" width="285" height="105"/>
-  <text class="text" x="1007" y="370">Downstream analysis</text>
-  <text class="small" x="1007" y="400">separate modelling and interpretation</text>
-
-  <path class="arrow" d="M195 222 H235"/>
-  <path class="arrow" d="M405 222 H445"/>
-  <path class="arrow" d="M620 222 H660"/>
-  <path class="arrow" d="M825 205 C850 190 845 115 865 115"/>
-  <path class="arrow" d="M825 222 H865"/>
-  <path class="arrow" d="M1007 300 V330"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1090" viewBox="0 0 1600 1090" role="img" aria-labelledby="title description">
+<title id="title">PCADI data-integration architecture</title>
+<desc id="description">From official source contracts to auditable practice-month and annual outputs</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#1F6F8B"/></marker>
+</defs>
+<rect width="1600" height="1090" fill="#F7FAFC"/>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700" fill="#123047"><tspan x="800.0" y="70.0">PCADI data-integration architecture</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="400" fill="#52646F"><tspan x="800.0" y="116.0">From official source contracts to auditable practice-month and annual outputs</tspan></text>
+<line x1="800" y1="361" x2="800" y2="415" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="800" y1="507" x2="800" y2="555" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="800" y1="647" x2="800" y2="695" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="800" y1="781" x2="450" y2="835" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="800" y1="781" x2="1150" y2="835" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="450" y1="931" x2="650" y2="980" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="1150" y1="931" x2="950" y2="980" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="250" y="205" width="1100" height="68" rx="18" fill="#E8F1F5" stroke="#123047" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="800.0" y="248.8">Official NHS England publications</tspan></text>
+<rect x="180" y="295" width="250" height="66" rx="15" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#123047"><tspan x="305.0" y="337.1">OCS</tspan></text>
+<rect x="470" y="295" width="250" height="66" rx="15" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#123047"><tspan x="595.0" y="337.1">GPAD</tspan></text>
+<rect x="760" y="295" width="250" height="66" rx="15" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#123047"><tspan x="885.0" y="337.1">CBT</tspan></text>
+<rect x="1050" y="295" width="330" height="66" rx="15" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#123047"><tspan x="1215.0" y="336.4">Registered patients</tspan></text>
+<rect x="250" y="415" width="1100" height="92" rx="18" fill="#DDF3EE" stroke="#2A9D8F" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#1D2A32"><tspan x="800.0" y="454.2">Source contracts and provenance</tspan><tspan x="800.0" y="485.2">Publication vintage | observation month | selected owner</tspan></text>
+<rect x="250" y="555" width="1100" height="92" rx="18" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#1D2A32"><tspan x="800.0" y="594.2">Validated one-row-per-practice-month source tables</tspan><tspan x="800.0" y="625.2">ODS practice code is the identity key</tspan></text>
+<rect x="250" y="695" width="1100" height="86" rx="18" fill="#FFF2D6" stroke="#E5A73C" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#1D2A32"><tspan x="800.0" y="747.5">Coverage-preserving practice-month spine</tspan></text>
+<rect x="170" y="835" width="560" height="96" rx="18" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#1D2A32"><tspan x="450.0" y="876.0">Question-specific joins</tspan><tspan x="450.0" y="908.2">Source-led and matched populations</tspan></text>
+<rect x="870" y="835" width="560" height="96" rx="18" fill="#FFFFFF" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#1D2A32"><tspan x="1150.0" y="876.0">Annual reference matrices</tspan><tspan x="1150.0" y="908.2">Exactly 12 complete eligible months</tspan></text>
+<rect x="390" y="980" width="820" height="72" rx="18" fill="#123047" stroke="#123047" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF"><tspan x="800.0" y="1025.8">Validation, analysis and reuse</tspan></text>
+<rect x="90" y="145" width="300" height="42" rx="16" fill="#123047" stroke="#123047" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF"><tspan x="240.0" y="172.3">Reusable pipeline</tspan></text>
+<rect x="1030" y="145" width="480" height="42" rx="16" fill="#DDF3EE" stroke="#2A9D8F" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#123047"><tspan x="1270.0" y="172.3">Included reference: Apr 2025 to Mar 2026</tspan></text>
 </svg>
