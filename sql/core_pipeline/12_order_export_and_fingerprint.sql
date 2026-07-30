@@ -26,7 +26,7 @@
    metadata, not a modelling feature.
 
    Validation gate
-   All thirty-six validation rows PASS before release; ordered and unordered
+   All thirty-nine validation rows PASS before release; ordered and unordered
    practice sets are identical; 6,067 canonical lines are generated.
 
    Expected result
@@ -45,7 +45,8 @@ SELECT
     gpad_face_to_face_share,
     gpad_telephone_share,
     gpad_same_day_share,
-    gpad_1_to_7_days_share,
+    gpad_1_day_share,
+    gpad_2_to_7_days_share,
     gpad_8_to_14_days_share,
     gpad_over_14_days_share,
     ocs_mean_absolute_monthly_rate_change,
@@ -69,7 +70,8 @@ SELECT
       || printf('%.17g', gpad_face_to_face_share) || '|'
       || printf('%.17g', gpad_telephone_share) || '|'
       || printf('%.17g', gpad_same_day_share) || '|'
-      || printf('%.17g', gpad_1_to_7_days_share) || '|'
+      || printf('%.17g', gpad_1_day_share) || '|'
+      || printf('%.17g', gpad_2_to_7_days_share) || '|'
       || printf('%.17g', gpad_8_to_14_days_share) || '|'
       || printf('%.17g', gpad_over_14_days_share) || '|'
       || printf('%.17g', ocs_mean_absolute_monthly_rate_change) || '|'
@@ -89,7 +91,7 @@ UNION ALL
 SELECT 'matrix_columns', CAST(COUNT(*) AS TEXT)
 FROM pragma_table_info('primary_practice_access_clustering_matrix_ordered')
 UNION ALL
-SELECT 'modelling_features', '13'
+SELECT 'modelling_features', '14'
 UNION ALL
 SELECT 'numeric_export_precision', '17 significant digits'
 UNION ALL
@@ -98,4 +100,3 @@ FROM pipeline_validation_results
 UNION ALL
 SELECT 'validation_failures', CAST(SUM(result <> 'PASS') AS TEXT)
 FROM pipeline_validation_results;
-

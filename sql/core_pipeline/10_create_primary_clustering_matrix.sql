@@ -2,7 +2,7 @@
    STAGE 10 - CREATE PRIMARY CLUSTERING MATRIX
 
    Purpose
-   Select the fixed modelling identifier and exactly thirteen validated
+   Select the fixed modelling identifier and exactly fourteen validated
    numerical features from the eligible annual practice table.
 
    Inputs
@@ -19,15 +19,16 @@
    is retained only for traceability and is not a modelling feature.
 
    Key assumptions
-   The 1-to-7-day feature combines 1-day and 2-to-7-day appointments. OCS
-   and GPAD remain separate activity domains and are never added together.
+   The primary specification preserves the official 1-day and 2-to-7-day
+   source categories separately. OCS and GPAD remain separate activity
+   domains and are never added together.
 
    Validation gate
-   6,067 unique practices; fourteen columns; thirteen complete numerical
-   features; no invalid shares, negative rates or undefined values.
+   6,067 unique practices; fifteen primary columns; fourteen complete
+   numerical features; no invalid shares, negative rates or undefined values.
 
    Expected result
-   6,067 rows, 6,067 unique practice codes and thirteen modelling features.
+   6,067 rows, 6,067 unique practice codes and fourteen primary features.
    ============================================================ */
 
 DROP TABLE IF EXISTS primary_practice_access_clustering_matrix;
@@ -42,7 +43,8 @@ SELECT
     gpad_face_to_face_share,
     gpad_telephone_share,
     gpad_same_day_share,
-    gpad_1_to_7_days_share,
+    gpad_1_day_share,
+    gpad_2_to_7_days_share,
     gpad_8_to_14_days_share,
     gpad_over_14_days_share,
     ocs_mean_absolute_monthly_rate_change,
@@ -51,4 +53,3 @@ FROM eligible_annual_practice_features;
 
 CREATE UNIQUE INDEX ux_primary_practice_access_clustering_matrix
     ON primary_practice_access_clustering_matrix (practice_code_standardised);
-

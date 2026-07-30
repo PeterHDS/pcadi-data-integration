@@ -67,8 +67,11 @@ SELECT
     1.0 * a.gpad_face_to_face / NULLIF(a.gpad_total, 0) AS gpad_face_to_face_share,
     1.0 * a.gpad_telephone / NULLIF(a.gpad_total, 0) AS gpad_telephone_share,
     1.0 * a.gpad_same_day / NULLIF(a.gpad_total, 0) AS gpad_same_day_share,
+    1.0 * a.gpad_one_day / NULLIF(a.gpad_total, 0) AS gpad_1_day_share,
+    1.0 * a.gpad_two_to_seven_days / NULLIF(a.gpad_total, 0)
+        AS gpad_2_to_7_days_share,
     1.0 * (a.gpad_one_day + a.gpad_two_to_seven_days) / NULLIF(a.gpad_total, 0)
-        AS gpad_1_to_7_days_share,
+        AS gpad_days_1_to_7_audit_share,
     1.0 * a.gpad_eight_to_fourteen_days / NULLIF(a.gpad_total, 0)
         AS gpad_8_to_14_days_share,
     1.0 * (a.gpad_fifteen_to_twenty_one_days
@@ -105,7 +108,8 @@ SELECT
     gpad_face_to_face_share,
     gpad_telephone_share,
     gpad_same_day_share,
-    gpad_1_to_7_days_share,
+    gpad_1_day_share,
+    gpad_2_to_7_days_share,
     gpad_8_to_14_days_share,
     gpad_over_14_days_share,
     ocs_mean_absolute_monthly_rate_change,

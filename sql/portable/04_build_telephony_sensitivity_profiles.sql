@@ -8,10 +8,22 @@ CREATE TABLE annual_cloud_telephony_features AS
 WITH monthly AS (
     SELECT
         c.*,
-        LAG(inbound_calls) OVER (
+        m.registered_patients,
+        CASE
+            WHEN c.inbound_calls IS NOT NULL AND m.registered_patients > 0
+            THEN 1000.0 * c.inbound_calls / m.registered_patients
+        END AS inbound_calls_per_1000,
+        LAG(
+            CASE
+                WHEN c.inbound_calls IS NOT NULL AND m.registered_patients > 0
+                THEN 1000.0 * c.inbound_calls / m.registered_patients
+            END
+        ) OVER (
             PARTITION BY practice_code_standardised ORDER BY reporting_month
-        ) AS prior_inbound
+        ) AS prior_inbound_rate
     FROM cloud_telephony_practice_month AS c
+    JOIN multichannel_practice_month_coverage AS m
+      USING (practice_code_standardised, reporting_month)
 ),
 annual AS (
     SELECT
@@ -24,9 +36,11 @@ annual AS (
         SUM(missed_calls) AS missed_calls,
         SUM(ivr_exits) AS ivr_exits,
         SUM(callback_requests) AS callback_requests,
-        AVG(CASE WHEN prior_inbound IS NOT NULL THEN ABS(inbound_calls - prior_inbound) END)
-            AS mean_absolute_monthly_inbound_change,
-        MAX(inbound_calls) - MIN(inbound_calls) AS inbound_range
+        AVG(CASE WHEN prior_inbound_rate IS NOT NULL
+                 THEN ABS(inbound_calls_per_1000 - prior_inbound_rate) END)
+            AS mean_absolute_monthly_call_rate_change,
+        MAX(inbound_calls_per_1000) - MIN(inbound_calls_per_1000)
+            AS call_rate_range
     FROM monthly
     GROUP BY practice_code_standardised
 )
@@ -45,8 +59,8 @@ SELECT
     c.inbound_calls AS cbt_annual_inbound_calls,
     1000.0 * c.inbound_calls / NULLIF(a.patient_month_exposure, 0)
         AS cbt_inbound_calls_per_1000_patient_months,
-    c.mean_absolute_monthly_inbound_change AS cbt_mean_absolute_monthly_call_change,
-    c.inbound_range AS cbt_call_range
+    c.mean_absolute_monthly_call_rate_change AS cbt_mean_absolute_monthly_call_rate_change,
+    c.call_rate_range AS cbt_call_rate_range
 FROM annual_practice_access_profiles AS a
 JOIN annual_cloud_telephony_features AS c USING (practice_code_standardised)
 WHERE c.cbt_months = 12
@@ -69,14 +83,15 @@ SELECT
     gpad_face_to_face_share,
     gpad_telephone_share,
     gpad_same_day_share,
-    gpad_1_to_7_days_share,
+    gpad_1_day_share,
+    gpad_2_to_7_days_share,
     gpad_8_to_14_days_share,
     gpad_over_14_days_share,
     ocs_mean_absolute_monthly_rate_change,
     gpad_mean_absolute_monthly_rate_change,
     cbt_inbound_calls_per_1000_patient_months,
-    cbt_mean_absolute_monthly_call_change,
-    cbt_call_range
+    cbt_mean_absolute_monthly_call_rate_change,
+    cbt_call_rate_range
 FROM annual_profiles_with_inbound_telephony_sensitivity;
 
 DROP TABLE IF EXISTS annual_profiles_with_telephony_outcome_sensitivity;
@@ -87,7 +102,7 @@ SELECT
     c.missed_calls AS cbt_missed_calls,
     c.ivr_exits AS cbt_ivr_exits,
     c.callback_requests AS cbt_callback_requests,
-    1.0 * c.answered_calls / NULLIF(c.inbound_calls, 0) AS cbt_answered_share,
+    1.0 * c.answered_calls / NULLIF(c.inbound_calls, 0) AS cbt_answered_share_cbt003,
     1.0 * c.missed_calls / NULLIF(c.inbound_calls, 0) AS cbt_missed_share,
     1.0 * c.ivr_exits / NULLIF(c.inbound_calls, 0) AS cbt_ivr_share,
     1.0 * c.callback_requests / NULLIF(c.inbound_calls, 0) AS cbt_callback_request_share
@@ -115,15 +130,16 @@ SELECT
     gpad_face_to_face_share,
     gpad_telephone_share,
     gpad_same_day_share,
-    gpad_1_to_7_days_share,
+    gpad_1_day_share,
+    gpad_2_to_7_days_share,
     gpad_8_to_14_days_share,
     gpad_over_14_days_share,
     ocs_mean_absolute_monthly_rate_change,
     gpad_mean_absolute_monthly_rate_change,
     cbt_inbound_calls_per_1000_patient_months,
-    cbt_mean_absolute_monthly_call_change,
-    cbt_call_range,
-    cbt_answered_share,
+    cbt_mean_absolute_monthly_call_rate_change,
+    cbt_call_rate_range,
+    cbt_answered_share_cbt003,
     cbt_missed_share,
     cbt_ivr_share,
     cbt_callback_request_share
