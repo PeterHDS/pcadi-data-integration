@@ -156,7 +156,8 @@ release publication requires approval after review. No clustering was run.
 
 - Branch: `repo-rebuild/correct-14-feature-and-design-guides`
 - Base: `main`
-- Pull request: `TO_BE_INSERTED_AFTER_DRAFT_PR_CREATION`
+- Pull request:
+  `https://github.com/PeterHDS/pcadi-data-integration/pull/6`
 
 ## Recommendation
 
