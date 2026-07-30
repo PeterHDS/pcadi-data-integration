@@ -37,10 +37,10 @@ Standardised OCS / GPAD / mapping tables
                          |
                          v
  Primary practice access clustering matrix
-      (identifier + 13 separate features)
+      (identifier + 14 separate features)
                          |
                          v
-  36 validations + ordering + canonical fingerprint
+  39 validations + ordering + canonical fingerprint
                          |
                          v
  Deterministic CSV export + fresh-reference equivalence
@@ -59,4 +59,3 @@ Both sources and the denominator are independently unique at this key before joi
 ## Feature lineage boundary
 
 OCS count and composition features use only OCS numerators. GPAD count and composition features use only GPAD numerators. Both rate families may use the same validated registered-list exposure. No feature adds OCS activity to GPAD activity.
-
