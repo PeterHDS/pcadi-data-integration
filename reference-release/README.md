@@ -40,3 +40,9 @@ contained file have locked checksums in
 `validation/release_asset_manifest.csv`. After v2.0.0 is published, the
 reference validator can restore missing files without overwriting files that
 are already present.
+
+Before v2.0.0 is published, clean-clone validation can restore only the seven
+unchanged practice-month files from the existing v1.0.1 archive. That fallback
+is permitted only when every missing filename, byte count and SHA-256 checksum
+exactly matches the current v2 manifest. The corrected annual matrices remain
+tracked in Git and are never supplied by the fallback archive.

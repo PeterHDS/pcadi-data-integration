@@ -117,7 +117,7 @@ It is prepared locally for publication only after the pull request is approved.
   inheritance: PASS.
 - Join-design grain and cardinality: PASS with zero duplicate stated keys and
   row-multiplication factor 1.0.
-- Publication manifest: 153 candidate files and 0 blockers.
+- Publication manifest: 155 candidate files and 0 blockers.
 - Public terminology, local paths, encoding and internal links: PASS.
 - Clean official-source build: 21/21 imports, 12/12 SQL stages, 39 PASS and
   0 FAIL, database integrity `ok`, 0 foreign-key violations and 6,067 unique
@@ -138,8 +138,9 @@ The full machine-readable acceptance record is
 The old dimensions, hashes and replacement assets remain only in the migration
 note and superseded-output registers. Historical design labels remain only in
 the internal crosswalk. The v1 practice-month restore manifest is retained with
-an explicit v1 filename for release history and is no longer used by the active
-restore command.
+an explicit v1 filename and is used only as a checksum-equivalent pre-release
+fallback for the seven unchanged large practice-month outputs. It cannot supply
+the corrected annual matrices.
 
 ## 9. Limits of verification
 

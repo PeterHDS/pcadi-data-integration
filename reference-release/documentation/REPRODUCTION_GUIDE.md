@@ -21,6 +21,12 @@ archive and SHA-256 checksum, restores only absent reference CSVs and verifies
 every restored file before validation. Existing output files are not
 overwritten.
 
+During review, before the v2.0.0 asset exists, the same command may obtain the
+seven unchanged practice-month outputs from the published v1.0.1 archive. The
+fallback is accepted only if each filename, byte count and SHA-256 checksum
+matches the current v2 manifest. It cannot restore or replace the corrected
+annual modelling matrices.
+
 ## Rebuild the primary annual OCS-GPAD matrix from source CSVs
 
 Obtain the exact 21 official CSVs listed in

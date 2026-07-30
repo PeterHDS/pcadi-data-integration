@@ -197,6 +197,31 @@ def main() -> None:
     assert len(reference) == 14
     assert all(row["status"] == "PASS" for row in reference)
 
+    current_asset_rows = read_rows(
+        ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
+    )
+    fallback_asset_rows = read_rows(
+        ROOT
+        / "reference-release"
+        / "validation"
+        / "v1_practice_month_restore_asset_manifest.csv"
+    )
+    current_contained = {
+        row["artifact"]: row
+        for row in current_asset_rows
+        if row["role"] == "contained complete reference CSV"
+    }
+    fallback_contained = {
+        row["artifact"]: row
+        for row in fallback_asset_rows
+        if row["role"] == "contained complete reference CSV"
+    }
+    assert len(fallback_contained) == 7
+    for filename, fallback_row in fallback_contained.items():
+        assert filename in current_contained
+        assert fallback_row["bytes"] == current_contained[filename]["bytes"]
+        assert fallback_row["sha256"] == current_contained[filename]["sha256"]
+
     primary_reference = ROOT / "outputs" / "primary_practice_access_clustering_matrix.csv"
     inbound_reference = ROOT / "outputs" / "cbt_inbound_sensitivity_clustering_matrix_17_features.csv"
     outcome_reference = ROOT / "outputs" / "cbt_outcomes_sensitivity_clustering_matrix_21_features.csv"

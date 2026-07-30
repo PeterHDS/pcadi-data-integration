@@ -27,6 +27,11 @@ REFERENCE_ASSET_URL = (
     "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
     f"v2.0.0/{REFERENCE_ASSET_NAME}"
 )
+PRE_RELEASE_FALLBACK_ASSET_NAME = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
+PRE_RELEASE_FALLBACK_ASSET_URL = (
+    "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
+    f"v1.0.1/{PRE_RELEASE_FALLBACK_ASSET_NAME}"
+)
 SQL_FILES = [
     ROOT / "sql" / "portable" / "01_create_canonical_source_tables.sql",
     ROOT / "sql" / "portable" / "02_build_practice_month_designs.sql",
@@ -426,31 +431,25 @@ def validate_downloads(config_path: Path, manifest_path: Path, download_dir: Pat
     return {"manifest_rows": len(rows), "audit_rows": len(audit), "failures": failures, "status": "PASS" if failures == 0 else "FAIL"}
 
 
-def restore_missing_reference_outputs() -> dict[str, object]:
-    manifest_path = (
-        ROOT
-        / "reference-release"
-        / "validation"
-        / "release_asset_manifest.csv"
-    )
+def read_asset_manifest(manifest_path: Path) -> tuple[list[dict[str, str]], dict[str, dict[str, str]]]:
     with manifest_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
-
-    asset = next((row for row in rows if row["artifact"] == REFERENCE_ASSET_NAME), None)
-    if asset is None:
-        raise ValueError(f"Reference asset {REFERENCE_ASSET_NAME} is absent from {manifest_path}")
     contained = {
         row["artifact"]: row
         for row in rows
         if row["role"] == "contained complete reference CSV"
     }
-    missing = [name for name in contained if not (ROOT / "outputs" / name).is_file()]
-    if not missing:
-        return {"status": "NOT_NEEDED", "files_restored": 0, "asset_url": REFERENCE_ASSET_URL}
+    return rows, contained
 
+
+def download_verified_asset(
+    asset_name: str,
+    asset_url: str,
+    asset: dict[str, str],
+) -> Path:
     cache_dir = ROOT / "work" / "reference_assets"
     cache_dir.mkdir(parents=True, exist_ok=True)
-    archive_path = cache_dir / REFERENCE_ASSET_NAME
+    archive_path = cache_dir / asset_name
     expected_bytes = int(asset["bytes"])
     expected_hash = asset["sha256"].upper()
     archive_valid = (
@@ -458,33 +457,40 @@ def restore_missing_reference_outputs() -> dict[str, object]:
         and archive_path.stat().st_size == expected_bytes
         and sha256(archive_path) == expected_hash
     )
-    if not archive_valid:
-        temporary_path = archive_path.with_suffix(archive_path.suffix + ".partial")
-        temporary_path.unlink(missing_ok=True)
-        try:
-            request = urllib.request.Request(
-                REFERENCE_ASSET_URL,
-                headers={"User-Agent": "PCADI-reference-validator/1.0"},
-            )
-            with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as handle:
-                shutil.copyfileobj(response, handle, length=1024 * 1024)
-        except (OSError, urllib.error.URLError) as exc:
-            temporary_path.unlink(missing_ok=True)
-            raise RuntimeError(
-                "The release-only reference outputs are missing and the pinned asset could not be downloaded. "
-                f"Check the internet connection or download {REFERENCE_ASSET_URL} manually."
-            ) from exc
-        observed_bytes = temporary_path.stat().st_size
-        observed_hash = sha256(temporary_path)
-        if observed_bytes != expected_bytes or observed_hash != expected_hash:
-            temporary_path.unlink(missing_ok=True)
-            raise ValueError(
-                "Downloaded reference asset failed integrity validation: "
-                f"expected {expected_bytes} bytes and {expected_hash}; "
-                f"observed {observed_bytes} bytes and {observed_hash}"
-            )
-        temporary_path.replace(archive_path)
+    if archive_valid:
+        return archive_path
 
+    temporary_path = archive_path.with_suffix(archive_path.suffix + ".partial")
+    temporary_path.unlink(missing_ok=True)
+    try:
+        request = urllib.request.Request(
+            asset_url,
+            headers={"User-Agent": "PCADI-reference-validator/1.0"},
+        )
+        with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as handle:
+            shutil.copyfileobj(response, handle, length=1024 * 1024)
+    except (OSError, urllib.error.URLError) as exc:
+        temporary_path.unlink(missing_ok=True)
+        raise RuntimeError(f"Could not download {asset_url}") from exc
+
+    observed_bytes = temporary_path.stat().st_size
+    observed_hash = sha256(temporary_path)
+    if observed_bytes != expected_bytes or observed_hash != expected_hash:
+        temporary_path.unlink(missing_ok=True)
+        raise ValueError(
+            "Downloaded reference asset failed integrity validation: "
+            f"expected {expected_bytes} bytes and {expected_hash}; "
+            f"observed {observed_bytes} bytes and {observed_hash}"
+        )
+    temporary_path.replace(archive_path)
+    return archive_path
+
+
+def restore_outputs_from_asset(
+    archive_path: Path,
+    missing: list[str],
+    current_manifest: dict[str, dict[str, str]],
+) -> int:
     restored = 0
     with zipfile.ZipFile(archive_path) as archive:
         members = {member.filename: member for member in archive.infolist() if not member.is_dir()}
@@ -496,15 +502,91 @@ def restore_missing_reference_outputs() -> dict[str, object]:
             temporary_target = target.with_suffix(target.suffix + ".partial")
             with archive.open(member) as source, temporary_target.open("wb") as destination:
                 shutil.copyfileobj(source, destination, length=1024 * 1024)
-            expected = contained[filename]
+            expected = current_manifest[filename]
             observed_bytes = temporary_target.stat().st_size
             observed_hash = sha256(temporary_target)
             if observed_bytes != int(expected["bytes"]) or observed_hash != expected["sha256"].upper():
                 temporary_target.unlink(missing_ok=True)
-                raise ValueError(f"Restored reference output failed integrity validation: {filename}")
+                raise ValueError(f"Restored reference output failed current-version validation: {filename}")
             temporary_target.replace(target)
             restored += 1
-    return {"status": "RESTORED", "files_restored": restored, "asset_url": REFERENCE_ASSET_URL}
+    return restored
+
+
+def restore_missing_reference_outputs() -> dict[str, object]:
+    manifest_path = ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
+    rows, contained = read_asset_manifest(manifest_path)
+    asset = next((row for row in rows if row["artifact"] == REFERENCE_ASSET_NAME), None)
+    if asset is None:
+        raise ValueError(f"Reference asset {REFERENCE_ASSET_NAME} is absent from {manifest_path}")
+    missing = [name for name in contained if not (ROOT / "outputs" / name).is_file()]
+    if not missing:
+        return {"status": "NOT_NEEDED", "files_restored": 0, "asset_url": REFERENCE_ASSET_URL}
+
+    try:
+        archive_path = download_verified_asset(REFERENCE_ASSET_NAME, REFERENCE_ASSET_URL, asset)
+        restored = restore_outputs_from_asset(archive_path, missing, contained)
+        return {
+            "status": "RESTORED",
+            "files_restored": restored,
+            "asset_url": REFERENCE_ASSET_URL,
+            "restore_route": "current release asset",
+        }
+    except RuntimeError as primary_error:
+        fallback_manifest_path = (
+            ROOT
+            / "reference-release"
+            / "validation"
+            / "v1_practice_month_restore_asset_manifest.csv"
+        )
+        fallback_rows, fallback_contained = read_asset_manifest(fallback_manifest_path)
+        fallback_asset = next(
+            (
+                row
+                for row in fallback_rows
+                if row["artifact"] == PRE_RELEASE_FALLBACK_ASSET_NAME
+            ),
+            None,
+        )
+        if fallback_asset is None:
+            raise ValueError(
+                f"Fallback asset {PRE_RELEASE_FALLBACK_ASSET_NAME} is absent from "
+                f"{fallback_manifest_path}"
+            ) from primary_error
+
+        ineligible = [
+            filename
+            for filename in missing
+            if filename not in fallback_contained
+            or fallback_contained[filename]["bytes"] != contained[filename]["bytes"]
+            or fallback_contained[filename]["sha256"].upper() != contained[filename]["sha256"].upper()
+        ]
+        if ineligible:
+            raise RuntimeError(
+                "The current release asset is unavailable and the verified pre-release fallback "
+                "does not exactly match every missing current-version output: "
+                + ", ".join(ineligible)
+            ) from primary_error
+
+        try:
+            fallback_archive = download_verified_asset(
+                PRE_RELEASE_FALLBACK_ASSET_NAME,
+                PRE_RELEASE_FALLBACK_ASSET_URL,
+                fallback_asset,
+            )
+        except RuntimeError as fallback_error:
+            raise RuntimeError(
+                "The release-only reference outputs are missing and neither verified asset could "
+                f"be downloaded. Current asset: {REFERENCE_ASSET_URL}. "
+                f"Pre-release fallback: {PRE_RELEASE_FALLBACK_ASSET_URL}."
+            ) from fallback_error
+        restored = restore_outputs_from_asset(fallback_archive, missing, contained)
+        return {
+            "status": "RESTORED",
+            "files_restored": restored,
+            "asset_url": PRE_RELEASE_FALLBACK_ASSET_URL,
+            "restore_route": "checksum-equivalent pre-release practice-month fallback",
+        }
 
 
 def validate_reference(destination: Path, restore_missing: bool = False) -> dict[str, object]:
