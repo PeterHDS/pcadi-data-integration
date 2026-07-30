@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 import sqlite3
@@ -22,16 +23,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-REFERENCE_ASSET_NAME = "PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip"
-REFERENCE_ASSET_URL = (
+REFERENCE_ASSET_NAME = "PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip"
+DEFAULT_REFERENCE_ASSET_URL = (
     "https://github.com/PeterHDS/pcadi-data-integration/releases/download/"
-    f"v1.0.0/{REFERENCE_ASSET_NAME}"
+    f"reference-apr2025-mar2026/{REFERENCE_ASSET_NAME}"
 )
-PRE_RELEASE_FALLBACK_ASSET_NAME = "NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip"
-PRE_RELEASE_FALLBACK_ASSET_URL = (
-    "https://github.com/PeterHDS/pcadi-data-integration/releases/latest/download/"
-    f"{PRE_RELEASE_FALLBACK_ASSET_NAME}"
-)
+REFERENCE_ASSET_URL = os.environ.get("PCADI_REFERENCE_ASSET_URL") or DEFAULT_REFERENCE_ASSET_URL
 SQL_FILES = [
     ROOT / "sql" / "portable" / "01_create_canonical_source_tables.sql",
     ROOT / "sql" / "portable" / "02_build_practice_month_designs.sql",
@@ -465,7 +462,7 @@ def download_verified_asset(
     try:
         request = urllib.request.Request(
             asset_url,
-            headers={"User-Agent": "PCADI-reference-validator/1.0"},
+            headers={"User-Agent": "PCADI-reference-validator"},
         )
         with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as handle:
             shutil.copyfileobj(response, handle, length=1024 * 1024)
@@ -523,70 +520,14 @@ def retrieve_missing_reference_outputs() -> dict[str, object]:
     if not missing:
         return {"status": "NOT_NEEDED", "files_retrieved": 0, "asset_url": REFERENCE_ASSET_URL}
 
-    try:
-        archive_path = download_verified_asset(REFERENCE_ASSET_NAME, REFERENCE_ASSET_URL, asset)
-        retrieved = retrieve_outputs_from_asset(archive_path, missing, contained)
-        return {
-            "status": "RETRIEVED",
-            "files_retrieved": retrieved,
-            "asset_url": REFERENCE_ASSET_URL,
-            "retrieval_route": "current release asset",
-        }
-    except RuntimeError as primary_error:
-        fallback_manifest_path = (
-            ROOT
-            / "reference-release"
-            / "validation"
-            / "prepublication_reference_asset_manifest.csv"
-        )
-        fallback_rows, fallback_contained = read_asset_manifest(fallback_manifest_path)
-        fallback_asset = next(
-            (
-                row
-                for row in fallback_rows
-                if row["artifact"] == PRE_RELEASE_FALLBACK_ASSET_NAME
-            ),
-            None,
-        )
-        if fallback_asset is None:
-            raise ValueError(
-                f"Fallback asset {PRE_RELEASE_FALLBACK_ASSET_NAME} is absent from "
-                f"{fallback_manifest_path}"
-            ) from primary_error
-
-        ineligible = [
-            filename
-            for filename in missing
-            if filename not in fallback_contained
-            or fallback_contained[filename]["bytes"] != contained[filename]["bytes"]
-            or fallback_contained[filename]["sha256"].upper() != contained[filename]["sha256"].upper()
-        ]
-        if ineligible:
-            raise RuntimeError(
-                "The current release asset is unavailable and the verified pre-release fallback "
-                "does not exactly match every missing current-version output: "
-                + ", ".join(ineligible)
-            ) from primary_error
-
-        try:
-            fallback_archive = download_verified_asset(
-                PRE_RELEASE_FALLBACK_ASSET_NAME,
-                PRE_RELEASE_FALLBACK_ASSET_URL,
-                fallback_asset,
-            )
-        except RuntimeError as fallback_error:
-            raise RuntimeError(
-                "The release-only reference outputs are missing and neither verified asset could "
-                f"be downloaded. Current asset: {REFERENCE_ASSET_URL}. "
-                f"Pre-release fallback: {PRE_RELEASE_FALLBACK_ASSET_URL}."
-            ) from fallback_error
-        retrieved = retrieve_outputs_from_asset(fallback_archive, missing, contained)
-        return {
-            "status": "RETRIEVED",
-            "files_retrieved": retrieved,
-            "asset_url": PRE_RELEASE_FALLBACK_ASSET_URL,
-            "retrieval_route": "checksum-equivalent pre-release practice-month fallback",
-        }
+    archive_path = download_verified_asset(REFERENCE_ASSET_NAME, REFERENCE_ASSET_URL, asset)
+    retrieved = retrieve_outputs_from_asset(archive_path, missing, contained)
+    return {
+        "status": "RETRIEVED",
+        "files_retrieved": retrieved,
+        "asset_url": REFERENCE_ASSET_URL,
+        "retrieval_route": "period-labelled reference release asset",
+    }
 
 
 def validate_reference(destination: Path, restore_missing: bool = False) -> dict[str, object]:

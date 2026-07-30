@@ -10,8 +10,10 @@ import math
 import re
 import shutil
 import sqlite3
+import struct
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -197,30 +199,21 @@ def main() -> None:
     assert len(reference) == 14
     assert all(row["status"] == "PASS" for row in reference)
 
-    current_asset_rows = read_rows(
+    asset_rows = read_rows(
         ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
     )
-    fallback_asset_rows = read_rows(
-        ROOT
-        / "reference-release"
-        / "validation"
-        / "prepublication_reference_asset_manifest.csv"
+    contained = {
+        row["artifact"]: row
+        for row in asset_rows
+        if row["role"] == "contained complete reference CSV"
+    }
+    asset = next(
+        row for row in asset_rows
+        if row["artifact"] == "PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip"
     )
-    current_contained = {
-        row["artifact"]: row
-        for row in current_asset_rows
-        if row["role"] == "contained complete reference CSV"
-    }
-    fallback_contained = {
-        row["artifact"]: row
-        for row in fallback_asset_rows
-        if row["role"] == "contained complete reference CSV"
-    }
-    assert len(fallback_contained) == 7
-    for filename, fallback_row in fallback_contained.items():
-        assert filename in current_contained
-        assert fallback_row["bytes"] == current_contained[filename]["bytes"]
-        assert fallback_row["sha256"] == current_contained[filename]["sha256"]
+    assert asset["bytes"] == "40656898"
+    assert asset["sha256"] == "93F6594BE743DA79CE4E8461DD307AF99692B31D61AAF2E12C003DB336C55022"
+    assert len(contained) == 14
 
     primary_reference = ROOT / "outputs" / "primary_practice_access_clustering_matrix.csv"
     inbound_reference = ROOT / "outputs" / "cbt_inbound_sensitivity_clustering_matrix_17_features.csv"
@@ -280,11 +273,7 @@ def main() -> None:
         text = path.read_text(encoding="utf-8")
         assert unexplained_design_terms.search(text) is None, f"Unexplained development-only terminology in {path}"
         assert local_path.search(text) is None, f"Local user path in {path}"
-        text_without_release_title = text.replace(
-            "PCADI v1.0.0 \u2014 Dissertation Reference Release",
-            "PCADI v1.0.0: Dissertation Reference Release",
-        )
-        assert "\u2014" not in text_without_release_title, f"Unexpected em dash in public text: {path}"
+        assert "\u2014" not in text, f"Unexpected em dash in public text: {path}"
         assert "\u00e2\u20ac" not in text and "\u00c3" not in text and "\ufffd" not in text, f"Likely text-encoding damage in {path}"
 
     public_positioning = "\n".join(
@@ -292,14 +281,68 @@ def main() -> None:
         for path in public_text_paths
     ).lower()
     for prohibited in (
+        "v" + "1.0.0",
+        "v" + "1.0.1",
+        "v" + "2.0.0",
+        "dissertation " + "release",
+        "dissertation reference " + "release",
+        "pcadi_" + "dissertation",
+        "fixed dissertation " + "build",
+        "checkout of " + "v1",
+        "release/" + "v1",
+        "pcadi_" + "v2",
         "former release " + "was wrong",
         "corrected " + "13-feature release",
         "superseded " + "active matrix",
         "migration to " + "v" + str(2),
-        "pcadi v" + str(2),
-        f"v{2}.0.0",
     ):
         assert prohibited not in public_positioning, f"Development positioning remains public: {prohibited}"
+
+    root_public = "\n".join(
+        (ROOT / filename).read_text(encoding="utf-8").lower()
+        for filename in ("README.md", "START_HERE.md", "CHANGELOG.md", "CITATION.cff")
+    )
+    assert "ds" + "7010" not in root_public
+    assert "disser" + "tation" not in root_public
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "## Start here" in readme
+    assert readme.index("## Start here") < readme.index("## Guides for particular readers")
+    assert "Dissertation " + "release:" not in readme
+    for fingerprint in (
+        "C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF",
+        "CCC179B870BBD3EC46DD1B75868DB38156FE23A44BBC5A8FF698505FC9B63ED5",
+        "D3D2E70C1A718260DD332B59F835EB6316826677A1DF5CEB928ED563C0FC1021",
+    ):
+        assert fingerprint not in readme
+
+    citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    assert "cff-version: 1.2.0" in citation
+    assert 'title: "PCADI: Primary Care Activity Data Integration"' in citation
+    assert "type: software" in citation
+    assert "\nversion:" not in citation
+    assert "\ndate-released:" not in citation
+
+    expected_images = {
+        "pcadi-architecture.png": (1600, 1090),
+        "pcadi-cohort-flow.png": (1400, 930),
+        "social-preview.png": (1280, 640),
+    }
+    for filename, expected_dimensions in expected_images.items():
+        path = ROOT / "docs" / "assets" / filename
+        with path.open("rb") as handle:
+            signature = handle.read(24)
+        assert signature[:8] == b"\x89PNG\r\n\x1a\n"
+        assert struct.unpack(">II", signature[16:24]) == expected_dimensions
+    for filename in ("pcadi-architecture.svg", "pcadi-cohort-flow.svg", "social-preview.svg"):
+        root = ET.parse(ROOT / "docs" / "assets" / filename).getroot()
+        assert root.tag.endswith("svg")
+
+    pipeline_cli_text = (ROOT / "automation" / "pipeline_cli.py").read_text(encoding="utf-8")
+    assert "reference-apr2025-mar2026" in pipeline_cli_text
+    assert "PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip" in pipeline_cli_text
+    assert 'members.get(f"outputs/{filename}")' in pipeline_cli_text
+    assert "PRE_RELEASE_FALLBACK" not in pipeline_cli_text
 
     markdown_paths = [
         path for path in ROOT.rglob("*.md")
@@ -327,7 +370,7 @@ def main() -> None:
 
     examiner_guide = (ROOT / "docs" / "audiences" / "examiner-guide.md").read_text(encoding="utf-8")
     assert "../../outputs/primary_practice_access_clustering_matrix.csv" in examiner_guide
-    assert "C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF" in examiner_guide
+    assert "../../validation/authoritative_output_manifest.csv" in examiner_guide
     assert "6,067" in examiner_guide and "14 complete numerical modelling features" in examiner_guide
 
     result = {

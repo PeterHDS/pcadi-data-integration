@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a checksum inventory for the planned dissertation reference release."""
+"""Create a checksum inventory for the public PCADI repository."""
 
 from __future__ import annotations
 

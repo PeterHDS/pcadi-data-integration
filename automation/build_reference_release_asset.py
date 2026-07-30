@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the deterministic PCADI dissertation reference-output archive."""
+"""Build the deterministic PCADI period-labelled reference-output archive."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "validation" / "authoritative_output_manifest.csv"
-ARCHIVE = ROOT / "work" / "release" / "PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip"
+ARCHIVE = ROOT / "work" / "release" / "PCADI_REFERENCE_OUTPUTS_APR2025_MAR2026.zip"
 MANIFEST = ROOT / "reference-release" / "validation" / "release_asset_manifest.csv"
 ZIP_TIME = (2026, 7, 30, 0, 0, 0)
 
@@ -49,7 +49,7 @@ def main() -> None:
     rows = [
         {
             "artifact": ARCHIVE.name,
-            "role": "planned v1.0.0 dissertation reference release asset",
+            "role": "April 2025 to March 2026 reference output asset",
             "rows": "",
             "columns": "",
             "bytes": ARCHIVE.stat().st_size,

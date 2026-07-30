@@ -7,6 +7,8 @@ on:
 jobs:
   deterministic-validation:
     runs-on: windows-latest
+    env:
+      PCADI_REFERENCE_ASSET_URL: ${{ vars.PCADI_REFERENCE_ASSET_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

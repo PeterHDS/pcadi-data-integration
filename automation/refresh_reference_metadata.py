@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh deterministic dissertation reference manifests from validated outputs."""
+"""Refresh deterministic period-labelled reference manifests from validated outputs."""
 
 from __future__ import annotations
 
