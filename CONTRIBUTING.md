@@ -2,6 +2,8 @@
 
 Changes should be small, documented and accompanied by deterministic tests.
 Never commit raw NHS downloads, databases, archives, credentials or local paths.
+Preserve the distinction between official source definitions, transparent
+project-derived measures and downstream analytical recommendations.
 
 For a new publication or schema:
 
@@ -9,8 +11,10 @@ For a new publication or schema:
 2. add or version the relevant source contract;
 3. add a synthetic regression fixture;
 4. prove source-month ownership and source-total reconciliation;
-5. run both demonstration periods and reference validation;
-6. document any changed output contract.
+5. run the 1, 3, 12 and 24-month demonstrations and reference validation;
+6. document any changed output contract;
+7. update the feature dictionary, checksums and migration record; and
+8. test exact parent-to-child inheritance for restricted-cohort matrices.
 
 Analytical transformations and joins belong in SQL. Orchestration code must not
 silently implement a competing transformation.

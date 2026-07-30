@@ -24,6 +24,8 @@ __pycache__/
 *.log
 .pytest_cache/
 .coverage
+pre_clustering_readiness_audit/
+python-modelling/
 
 # Local publication-preparation records; useful before the first commit only
 INSPECT_BEFORE_GIT.md
