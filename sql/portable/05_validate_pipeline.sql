@@ -100,8 +100,67 @@ SELECT 'annual_stage_period_rule', 'annual output allowed only when requested fo
             THEN 'PASS' ELSE 'FAIL' END,
        'Practice-month runs of any length remain separate from the optional twelve-month annual product.'
 UNION ALL
-SELECT 'annual_matrix_column_count', 'identifier plus thirteen modelling features when annual output exists', '14',
-       CAST((SELECT COUNT(*) FROM pragma_table_info('annual_practice_access_modelling_matrix')) AS TEXT),
-       CASE WHEN (SELECT COUNT(*) FROM pragma_table_info('annual_practice_access_modelling_matrix')) = 14
+SELECT 'annual_matrix_exact_schema', 'locked identifier and fourteen-feature order',
+       'practice_code_standardised|ocs_submissions_per_1000_patient_months|ocs_clinical_share|ocs_administrative_share|gpad_appointments_per_1000_patient_months|gpad_dna_share|gpad_face_to_face_share|gpad_telephone_share|gpad_same_day_share|gpad_1_day_share|gpad_2_to_7_days_share|gpad_8_to_14_days_share|gpad_over_14_days_share|ocs_mean_absolute_monthly_rate_change|gpad_mean_absolute_monthly_rate_change',
+       (SELECT GROUP_CONCAT(name, '|') FROM (SELECT name FROM pragma_table_info('annual_practice_access_modelling_matrix') ORDER BY cid)),
+       CASE WHEN (SELECT GROUP_CONCAT(name, '|') FROM (SELECT name FROM pragma_table_info('annual_practice_access_modelling_matrix') ORDER BY cid))
+              = 'practice_code_standardised|ocs_submissions_per_1000_patient_months|ocs_clinical_share|ocs_administrative_share|gpad_appointments_per_1000_patient_months|gpad_dna_share|gpad_face_to_face_share|gpad_telephone_share|gpad_same_day_share|gpad_1_day_share|gpad_2_to_7_days_share|gpad_8_to_14_days_share|gpad_over_14_days_share|ocs_mean_absolute_monthly_rate_change|gpad_mean_absolute_monthly_rate_change'
             THEN 'PASS' ELSE 'FAIL' END,
-       'The identifier is retained for traceability and is not a modelling feature.';
+       'The identifier is retained for traceability and is not a modelling feature.'
+UNION ALL
+SELECT 'cbt_inbound_matrix_exact_schema', 'fourteen inherited fields plus three CBT inbound fields', '18 total columns',
+       CAST((SELECT COUNT(*) FROM pragma_table_info('inbound_telephony_sensitivity_modelling_matrix')) AS TEXT),
+       CASE WHEN (SELECT COUNT(*) FROM pragma_table_info('inbound_telephony_sensitivity_modelling_matrix')) = 18
+            THEN 'PASS' ELSE 'FAIL' END,
+       'The restricted inbound matrix contains seventeen numerical features.'
+UNION ALL
+SELECT 'cbt_outcome_matrix_exact_schema', 'seventeen inherited fields plus four CBT outcome fields', '22 total columns',
+       CAST((SELECT COUNT(*) FROM pragma_table_info('telephony_outcome_sensitivity_modelling_matrix')) AS TEXT),
+       CASE WHEN (SELECT COUNT(*) FROM pragma_table_info('telephony_outcome_sensitivity_modelling_matrix')) = 22
+            THEN 'PASS' ELSE 'FAIL' END,
+       'The raw outcome-complete matrix contains twenty-one numerical features.'
+UNION ALL
+SELECT 'cbt_inbound_parent_inheritance', 'child rows absent from parent or with changed shared values', '0',
+       CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       'Every shared OCS-GPAD value must be inherited exactly by practice code.'
+FROM inbound_telephony_sensitivity_modelling_matrix AS c
+LEFT JOIN annual_practice_access_modelling_matrix AS p USING (practice_code_standardised)
+WHERE p.practice_code_standardised IS NULL
+   OR c.ocs_submissions_per_1000_patient_months IS NOT p.ocs_submissions_per_1000_patient_months
+   OR c.ocs_clinical_share IS NOT p.ocs_clinical_share
+   OR c.ocs_administrative_share IS NOT p.ocs_administrative_share
+   OR c.gpad_appointments_per_1000_patient_months IS NOT p.gpad_appointments_per_1000_patient_months
+   OR c.gpad_dna_share IS NOT p.gpad_dna_share
+   OR c.gpad_face_to_face_share IS NOT p.gpad_face_to_face_share
+   OR c.gpad_telephone_share IS NOT p.gpad_telephone_share
+   OR c.gpad_same_day_share IS NOT p.gpad_same_day_share
+   OR c.gpad_1_day_share IS NOT p.gpad_1_day_share
+   OR c.gpad_2_to_7_days_share IS NOT p.gpad_2_to_7_days_share
+   OR c.gpad_8_to_14_days_share IS NOT p.gpad_8_to_14_days_share
+   OR c.gpad_over_14_days_share IS NOT p.gpad_over_14_days_share
+   OR c.ocs_mean_absolute_monthly_rate_change IS NOT p.ocs_mean_absolute_monthly_rate_change
+   OR c.gpad_mean_absolute_monthly_rate_change IS NOT p.gpad_mean_absolute_monthly_rate_change
+UNION ALL
+SELECT 'cbt_outcome_parent_inheritance', 'child rows absent from parent or with changed shared values', '0',
+       CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+       'Every shared core and inbound value must be inherited exactly by practice code.'
+FROM telephony_outcome_sensitivity_modelling_matrix AS c
+LEFT JOIN inbound_telephony_sensitivity_modelling_matrix AS p USING (practice_code_standardised)
+WHERE p.practice_code_standardised IS NULL
+   OR c.ocs_submissions_per_1000_patient_months IS NOT p.ocs_submissions_per_1000_patient_months
+   OR c.ocs_clinical_share IS NOT p.ocs_clinical_share
+   OR c.ocs_administrative_share IS NOT p.ocs_administrative_share
+   OR c.gpad_appointments_per_1000_patient_months IS NOT p.gpad_appointments_per_1000_patient_months
+   OR c.gpad_dna_share IS NOT p.gpad_dna_share
+   OR c.gpad_face_to_face_share IS NOT p.gpad_face_to_face_share
+   OR c.gpad_telephone_share IS NOT p.gpad_telephone_share
+   OR c.gpad_same_day_share IS NOT p.gpad_same_day_share
+   OR c.gpad_1_day_share IS NOT p.gpad_1_day_share
+   OR c.gpad_2_to_7_days_share IS NOT p.gpad_2_to_7_days_share
+   OR c.gpad_8_to_14_days_share IS NOT p.gpad_8_to_14_days_share
+   OR c.gpad_over_14_days_share IS NOT p.gpad_over_14_days_share
+   OR c.ocs_mean_absolute_monthly_rate_change IS NOT p.ocs_mean_absolute_monthly_rate_change
+   OR c.gpad_mean_absolute_monthly_rate_change IS NOT p.gpad_mean_absolute_monthly_rate_change
+   OR c.cbt_inbound_calls_per_1000_patient_months IS NOT p.cbt_inbound_calls_per_1000_patient_months
+   OR c.cbt_mean_absolute_monthly_call_rate_change IS NOT p.cbt_mean_absolute_monthly_call_rate_change
+   OR c.cbt_call_rate_range IS NOT p.cbt_call_rate_range;

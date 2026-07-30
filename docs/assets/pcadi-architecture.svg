@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">PCADI pipeline architecture</title>
+  <desc id="desc">Official NHS England releases pass through source contracts, practice-month validation, a union coverage spine, question-specific joins, annual matrices, and downstream analysis.</desc>
+  <style>
+    .box { fill: #f7fbff; stroke: #174a7e; stroke-width: 2; rx: 12; }
+    .annual { fill: #eef8f1; stroke: #26734d; stroke-width: 2; rx: 12; }
+    .text { font: 600 18px Arial, sans-serif; fill: #16202a; text-anchor: middle; }
+    .small { font: 15px Arial, sans-serif; fill: #344454; text-anchor: middle; }
+    .arrow { stroke: #52677a; stroke-width: 3; fill: none; marker-end: url(#head); }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#52677a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="480" fill="#ffffff"/>
+  <rect class="box" x="35" y="165" width="160" height="115"/>
+  <text class="text" x="115" y="205"><tspan x="115">Official NHS</tspan><tspan x="115" dy="24">releases</tspan></text>
+  <text class="small" x="115" y="258">OCS, GPAD, CBT</text>
+
+  <rect class="box" x="235" y="165" width="170" height="115"/>
+  <text class="text" x="320" y="205"><tspan x="320">Prepared source</tspan><tspan x="320" dy="24">contracts</tspan></text>
+  <text class="small" x="320" y="258">schema + provenance</text>
+
+  <rect class="box" x="445" y="165" width="175" height="115"/>
+  <text class="text" x="532" y="205"><tspan x="532">Validated</tspan><tspan x="532" dy="24">practice-months</tspan></text>
+  <text class="small" x="532" y="258">one row per key</text>
+
+  <rect class="box" x="660" y="165" width="165" height="115"/>
+  <text class="text" x="742" y="205"><tspan x="742">Union coverage</tspan><tspan x="742" dy="24">spine</tspan></text>
+  <text class="small" x="742" y="258">presence retained</text>
+
+  <rect class="box" x="865" y="60" width="285" height="105"/>
+  <text class="text" x="1007" y="100">Question-specific joins</text>
+  <text class="small" x="1007" y="130">source-led and matched populations</text>
+
+  <rect class="annual" x="865" y="195" width="285" height="105"/>
+  <text class="text" x="1007" y="235">Annual matrices</text>
+  <text class="small" x="1007" y="265">14 core, 17 inbound, 21 outcomes</text>
+
+  <rect class="box" x="865" y="330" width="285" height="105"/>
+  <text class="text" x="1007" y="370">Downstream analysis</text>
+  <text class="small" x="1007" y="400">separate modelling and interpretation</text>
+
+  <path class="arrow" d="M195 222 H235"/>
+  <path class="arrow" d="M405 222 H445"/>
+  <path class="arrow" d="M620 222 H660"/>
+  <path class="arrow" d="M825 205 C850 190 845 115 865 115"/>
+  <path class="arrow" d="M825 222 H865"/>
+  <path class="arrow" d="M1007 300 V330"/>
+</svg>

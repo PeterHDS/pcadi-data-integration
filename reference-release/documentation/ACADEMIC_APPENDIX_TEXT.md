@@ -25,8 +25,8 @@ joining, eligibility and feature logic.
 | 7 | Test prospective join cardinality | Join audit |
 | 8 | Integrate unique practice-month blocks | Integrated monthly panel |
 | 9 | Construct annual features and apply cohort rules | Eligible annual practice table |
-| 10 | Select the thirteen modelling features | Primary matrix |
-| 11 | Execute the validation framework | Thirty-six checks |
+| 10 | Select the fourteen modelling features | Primary matrix |
+| 11 | Execute the validation framework | Thirty-nine checks |
 | 12 | Order, fingerprint and export | Deterministic output |
 
 `reference-release/input_manifest.csv` records each source path, raw table,
@@ -62,6 +62,6 @@ fingerprint agreement. The clean-build result is recorded in
 
 The final repository export is
 `outputs/primary_practice_access_clustering_matrix.csv`. It contains one
-traceability identifier and thirteen numerical features for each of 6,067
+traceability identifier and fourteen numerical features for each of 6,067
 practices. The identifier is not a modelling feature. No clustering is
 executed by this repository.

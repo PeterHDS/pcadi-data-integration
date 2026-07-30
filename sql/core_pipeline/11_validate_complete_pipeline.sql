@@ -3,7 +3,7 @@
 
    Purpose
    Materialise source reconciliation, eligibility, missingness, feature
-   ranges and the thirty-six mandatory substantive validation checks.
+   ranges and the thirty-nine mandatory substantive validation checks.
 
    Inputs
    All standardised, practice-month, annual, cohort and matrix tables.
@@ -25,11 +25,11 @@
    analytical cohort.
 
    Validation gate
-   Exactly thirty-six validation rows, all PASS, plus zero unexplained
+   Exactly thirty-nine validation rows, all PASS, plus zero unexplained
    source reconciliation difference.
 
    Expected result
-   36 PASS and 0 FAIL; thirteen feature-range rows; no final feature NULLs.
+   39 PASS and 0 FAIL; fourteen feature-range rows; no final feature NULLs.
    ============================================================ */
 
 DROP TABLE IF EXISTS source_reconciliation_summary;
@@ -113,7 +113,8 @@ WITH final_values(feature, value) AS (
     UNION ALL SELECT 'gpad_face_to_face_share', gpad_face_to_face_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_telephone_share', gpad_telephone_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_same_day_share', gpad_same_day_share FROM primary_practice_access_clustering_matrix
-    UNION ALL SELECT 'gpad_1_to_7_days_share', gpad_1_to_7_days_share FROM primary_practice_access_clustering_matrix
+    UNION ALL SELECT 'gpad_1_day_share', gpad_1_day_share FROM primary_practice_access_clustering_matrix
+    UNION ALL SELECT 'gpad_2_to_7_days_share', gpad_2_to_7_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_8_to_14_days_share', gpad_8_to_14_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_over_14_days_share', gpad_over_14_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'ocs_mean_absolute_monthly_rate_change', ocs_mean_absolute_monthly_rate_change FROM primary_practice_access_clustering_matrix
@@ -128,7 +129,8 @@ candidate_values(feature, value) AS (
     UNION ALL SELECT 'gpad_face_to_face_share', gpad_face_to_face_share FROM candidate_annual_practice_features
     UNION ALL SELECT 'gpad_telephone_share', gpad_telephone_share FROM candidate_annual_practice_features
     UNION ALL SELECT 'gpad_same_day_share', gpad_same_day_share FROM candidate_annual_practice_features
-    UNION ALL SELECT 'gpad_1_to_7_days_share', gpad_1_to_7_days_share FROM candidate_annual_practice_features
+    UNION ALL SELECT 'gpad_1_day_share', gpad_1_day_share FROM candidate_annual_practice_features
+    UNION ALL SELECT 'gpad_2_to_7_days_share', gpad_2_to_7_days_share FROM candidate_annual_practice_features
     UNION ALL SELECT 'gpad_8_to_14_days_share', gpad_8_to_14_days_share FROM candidate_annual_practice_features
     UNION ALL SELECT 'gpad_over_14_days_share', gpad_over_14_days_share FROM candidate_annual_practice_features
     UNION ALL SELECT 'ocs_mean_absolute_monthly_rate_change', ocs_mean_absolute_monthly_rate_change FROM candidate_annual_practice_features
@@ -165,7 +167,8 @@ WITH values_long(feature, value) AS (
     UNION ALL SELECT 'gpad_face_to_face_share', gpad_face_to_face_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_telephone_share', gpad_telephone_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_same_day_share', gpad_same_day_share FROM primary_practice_access_clustering_matrix
-    UNION ALL SELECT 'gpad_1_to_7_days_share', gpad_1_to_7_days_share FROM primary_practice_access_clustering_matrix
+    UNION ALL SELECT 'gpad_1_day_share', gpad_1_day_share FROM primary_practice_access_clustering_matrix
+    UNION ALL SELECT 'gpad_2_to_7_days_share', gpad_2_to_7_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_8_to_14_days_share', gpad_8_to_14_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'gpad_over_14_days_share', gpad_over_14_days_share FROM primary_practice_access_clustering_matrix
     UNION ALL SELECT 'ocs_mean_absolute_monthly_rate_change', ocs_mean_absolute_monthly_rate_change FROM primary_practice_access_clustering_matrix
@@ -230,14 +233,17 @@ INSERT INTO pipeline_validation_results SELECT 23, 'GPAD total reconciliation', 
 INSERT INTO pipeline_validation_results SELECT 24, 'Annual feature internal validations', 'count non-PASS annual_feature_internal_validation', '0', CAST(SUM(result <> 'PASS') AS TEXT), CASE WHEN SUM(result <> 'PASS') = 0 THEN 'PASS' ELSE 'FAIL' END, 'Every annual-feature and category-reconciliation check must pass.' FROM annual_feature_internal_validation;
 INSERT INTO pipeline_validation_results SELECT 25, 'No final feature NULL converted to zero', 'feature_missingness_audit final totals', '0 NULL; observed zeros retained separately', CAST(SUM(sql_null_count) AS TEXT) || ' NULL; ' || SUM(observed_zero_count) || ' observed zeros', CASE WHEN SUM(sql_null_count) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Observed zero and missing are distinct.' FROM feature_missingness_audit WHERE phase = 'final matrix';
 INSERT INTO pipeline_validation_results SELECT 26, 'Finite non-negative rate/change features', 'invalid numeric rows', '0', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Rates and changes must be finite and non-negative.' FROM primary_practice_access_clustering_matrix WHERE ocs_submissions_per_1000_patient_months < 0 OR gpad_appointments_per_1000_patient_months < 0 OR ocs_mean_absolute_monthly_rate_change < 0 OR gpad_mean_absolute_monthly_rate_change < 0 OR ABS(ocs_submissions_per_1000_patient_months) > 1e308 OR ABS(gpad_appointments_per_1000_patient_months) > 1e308;
-INSERT INTO pipeline_validation_results SELECT 27, 'Shares within valid range', 'rows with selected share outside 0..1', '0', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Each selected proportion must lie from zero to one.' FROM primary_practice_access_clustering_matrix WHERE ocs_clinical_share NOT BETWEEN 0 AND 1 OR ocs_administrative_share NOT BETWEEN 0 AND 1 OR gpad_dna_share NOT BETWEEN 0 AND 1 OR gpad_face_to_face_share NOT BETWEEN 0 AND 1 OR gpad_telephone_share NOT BETWEEN 0 AND 1 OR gpad_same_day_share NOT BETWEEN 0 AND 1 OR gpad_1_to_7_days_share NOT BETWEEN 0 AND 1 OR gpad_8_to_14_days_share NOT BETWEEN 0 AND 1 OR gpad_over_14_days_share NOT BETWEEN 0 AND 1;
-INSERT INTO pipeline_validation_results SELECT 28, 'Selected booking shares do not exceed one', 'same-day + 1-to-7 + 8-to-14 + over-14', 'No row above 1', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Known mutually exclusive booking bands cannot exceed total appointments.' FROM primary_practice_access_clustering_matrix WHERE gpad_same_day_share + gpad_1_to_7_days_share + gpad_8_to_14_days_share + gpad_over_14_days_share > 1.000000001;
+INSERT INTO pipeline_validation_results SELECT 27, 'Shares within valid range', 'rows with selected share outside 0..1', '0', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Each selected proportion must lie from zero to one.' FROM primary_practice_access_clustering_matrix WHERE ocs_clinical_share NOT BETWEEN 0 AND 1 OR ocs_administrative_share NOT BETWEEN 0 AND 1 OR gpad_dna_share NOT BETWEEN 0 AND 1 OR gpad_face_to_face_share NOT BETWEEN 0 AND 1 OR gpad_telephone_share NOT BETWEEN 0 AND 1 OR gpad_same_day_share NOT BETWEEN 0 AND 1 OR gpad_1_day_share NOT BETWEEN 0 AND 1 OR gpad_2_to_7_days_share NOT BETWEEN 0 AND 1 OR gpad_8_to_14_days_share NOT BETWEEN 0 AND 1 OR gpad_over_14_days_share NOT BETWEEN 0 AND 1;
+INSERT INTO pipeline_validation_results SELECT 28, 'Selected booking shares do not exceed one', 'same-day + 1-day + 2-to-7 + 8-to-14 + over-14', 'No row above 1', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'Known mutually exclusive booking bands cannot exceed total appointments.' FROM primary_practice_access_clustering_matrix WHERE gpad_same_day_share + gpad_1_day_share + gpad_2_to_7_days_share + gpad_8_to_14_days_share + gpad_over_14_days_share > 1.000000001;
 INSERT INTO pipeline_validation_results SELECT 29, 'Eligible before activity-total exclusion', 'practice count comparison target', '6130', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 6130 THEN 'PASS' ELSE 'FAIL' END, 'Observed lineage evidence; not used to manufacture the cohort.' FROM eligible_practices_before_activity_total_rule;
 INSERT INTO pipeline_validation_results SELECT 30, 'Zero or null OCS total exclusions', 'documented final exclusion count', '63', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 63 THEN 'PASS' ELSE 'FAIL' END, 'Composition shares are undefined and are not imputed.' FROM analytical_cohort_exclusion_audit WHERE exclusion_reason IN ('ZERO_OCS_ANNUAL_TOTAL', 'NULL_OCS_ANNUAL_TOTAL');
 INSERT INTO pipeline_validation_results SELECT 31, 'Final practice uniqueness', 'rows and distinct practices equal', 'equal', COUNT(*) || ' rows; ' || COUNT(DISTINCT practice_code_standardised) || ' practices', CASE WHEN COUNT(*) = COUNT(DISTINCT practice_code_standardised) THEN 'PASS' ELSE 'FAIL' END, 'One row per practice.' FROM primary_practice_access_clustering_matrix;
-INSERT INTO pipeline_validation_results SELECT 32, 'Final feature completeness', 'total final feature NULL count', '0', CAST(SUM(sql_null_count) AS TEXT), CASE WHEN SUM(sql_null_count) = 0 THEN 'PASS' ELSE 'FAIL' END, 'All thirteen modelling values must be complete.' FROM feature_missingness_audit WHERE phase = 'final matrix';
+INSERT INTO pipeline_validation_results SELECT 32, 'Final feature completeness', 'total final feature NULL count', '0', CAST(SUM(sql_null_count) AS TEXT), CASE WHEN SUM(sql_null_count) = 0 THEN 'PASS' ELSE 'FAIL' END, 'All fourteen modelling values must be complete.' FROM feature_missingness_audit WHERE phase = 'final matrix';
 INSERT INTO pipeline_validation_results SELECT 33, 'Final practice count', 'comparison target', '6067', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 6067 THEN 'PASS' ELSE 'FAIL' END, 'The target is not used to manufacture the cohort.' FROM primary_practice_access_clustering_matrix;
-INSERT INTO pipeline_validation_results SELECT 34, 'Feature range rows', 'one summary per modelling feature', '13', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 13 THEN 'PASS' ELSE 'FAIL' END, 'Distribution evidence exists for every feature.' FROM feature_range_summary;
-INSERT INTO pipeline_validation_results SELECT 35, '1-to-7-day modelling feature present', 'pragma_table_info matrix', '1', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 1 THEN 'PASS' ELSE 'FAIL' END, 'The final matrix must contain gpad_1_to_7_days_share.' FROM pragma_table_info('primary_practice_access_clustering_matrix') WHERE name = 'gpad_1_to_7_days_share';
-INSERT INTO pipeline_validation_results SELECT 36, '2-to-7-only modelling feature absent', 'pragma_table_info matrix', '0', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END, 'The final matrix must not contain a separate incomplete 2-to-7-only modelling feature.' FROM pragma_table_info('primary_practice_access_clustering_matrix') WHERE name = 'gpad_2_to_7_days_share';
-
+INSERT INTO pipeline_validation_results SELECT 34, 'Feature range rows', 'one summary per modelling feature', '14', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 14 THEN 'PASS' ELSE 'FAIL' END, 'Distribution evidence exists for every feature.' FROM feature_range_summary;
+INSERT INTO pipeline_validation_results SELECT 35, 'Separate 1-day primary feature present', 'pragma_table_info matrix', '1', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 1 THEN 'PASS' ELSE 'FAIL' END, 'The primary matrix must retain gpad_1_day_share.' FROM pragma_table_info('primary_practice_access_clustering_matrix') WHERE name = 'gpad_1_day_share';
+INSERT INTO pipeline_validation_results SELECT 36, 'Separate 2-to-7-day primary feature present', 'pragma_table_info matrix', '1', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 1 THEN 'PASS' ELSE 'FAIL' END, 'The primary matrix must retain gpad_2_to_7_days_share.' FROM pragma_table_info('primary_practice_access_clustering_matrix') WHERE name = 'gpad_2_to_7_days_share';
+INSERT INTO pipeline_validation_results SELECT 37, 'Primary matrix exact schema', 'ordered column contract', 'practice_code_standardised|ocs_submissions_per_1000_patient_months|ocs_clinical_share|ocs_administrative_share|gpad_appointments_per_1000_patient_months|gpad_dna_share|gpad_face_to_face_share|gpad_telephone_share|gpad_same_day_share|gpad_1_day_share|gpad_2_to_7_days_share|gpad_8_to_14_days_share|gpad_over_14_days_share|ocs_mean_absolute_monthly_rate_change|gpad_mean_absolute_monthly_rate_change', GROUP_CONCAT(name, '|'), CASE WHEN GROUP_CONCAT(name, '|') = 'practice_code_standardised|ocs_submissions_per_1000_patient_months|ocs_clinical_share|ocs_administrative_share|gpad_appointments_per_1000_patient_months|gpad_dna_share|gpad_face_to_face_share|gpad_telephone_share|gpad_same_day_share|gpad_1_day_share|gpad_2_to_7_days_share|gpad_8_to_14_days_share|gpad_over_14_days_share|ocs_mean_absolute_monthly_rate_change|gpad_mean_absolute_monthly_rate_change' THEN 'PASS' ELSE 'FAIL' END, 'The matrix must expose only the locked identifier and fourteen-feature interface in the specified order.' FROM pragma_table_info('primary_practice_access_clustering_matrix') ORDER BY cid;
+INSERT INTO pipeline_validation_results SELECT 38, 'Primary matrix column count', 'identifier plus fourteen modelling features', '15', CAST(COUNT(*) AS TEXT), CASE WHEN COUNT(*) = 15 THEN 'PASS' ELSE 'FAIL' END, 'The public matrix contract contains one traceability identifier and fourteen numerical features.' FROM pragma_table_info('primary_practice_access_clustering_matrix');
+INSERT INTO pipeline_validation_results
+SELECT 39, 'Audit-only 1-to-7-day arithmetic reconciliation', 'max abs(1-day + 2-to-7-day - audit derivative)', '<= 1e-12', printf('%.17g', MAX(ABS(gpad_1_day_share + gpad_2_to_7_days_share - gpad_days_1_to_7_audit_share))), CASE WHEN MAX(ABS(gpad_1_day_share + gpad_2_to_7_days_share - gpad_days_1_to_7_audit_share)) <= 0.000000000001 THEN 'PASS' ELSE 'FAIL' END, 'The audit derivative is retained in the detailed annual table only and is absent from every modelling matrix.' FROM eligible_annual_practice_features;

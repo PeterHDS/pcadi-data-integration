@@ -30,8 +30,9 @@ Then run the twelve-month fixture:
 python automation/pipeline_cli.py demo --months 12
 ```
 
-Twelve months additionally creates an annual 13-feature matrix because the
+Twelve months additionally creates an annual 14-feature matrix because the
 synthetic configuration explicitly enables that product. Compare its booking
-features with the source columns: one-day and two-to-seven-day counts are
-combined once, while all intervals above fourteen days remain mutually
-exclusive. Other period lengths deliberately leave the annual tables empty.
+features with the source columns: one-day and two-to-seven-day counts remain
+separate, while the three intervals above fourteen days form the documented
+over-fourteen-day feature. Other period lengths deliberately leave the annual
+tables empty.

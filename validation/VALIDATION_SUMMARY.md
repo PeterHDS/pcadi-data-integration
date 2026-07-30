@@ -1,4 +1,4 @@
-# Frozen reference validation
+# Dissertation reference validation
 
 - Overall evidence verdict: **VALIDATED**
 - SQL gates: 26/26 passed
@@ -6,13 +6,21 @@
 - Numerical matrix checks: 3/3 passed
 - Working database integrity: `ok`
 - Clustering run: **No**
-- Repository publication changes no analytical values or validation verdicts.
 
-The primary annual matrix contains 6,067 unique practices and exactly thirteen
-complete numerical modelling features plus one traceability identifier. The
-inbound CBT sensitivity matrix contains 3,020 practices; the CBT outcomes
-sensitivity matrix contains 1,456. The independent temporal table contains
-6,152 practices and 582 documented April 2025 Y60 integrity flags.
+The primary annual matrix contains 6,067 unique practices, fourteen complete
+numerical modelling features and one traceability identifier. The published
+GPAD `1 day` and `2 to 7 days` bands remain separate. The CBT inbound
+restricted-cohort matrix contains 3,020 practices and seventeen features. The
+CBT outcome-complete restricted-cohort matrix contains 1,456 practices and
+twenty-one raw features.
 
-Run `RUN_REFERENCE_VALIDATION.cmd` to recalculate all 14 output checksums without
-the source databases.
+The independent temporal table contains 6,152 practices and 582 documented
+April 2025 Y60 integrity flags.
+
+Feature-contract evidence is retained in
+`booking_delay_source_to_prepared_reconciliation.csv`,
+`booking_delay_feature_reconciliation.csv` and
+`primary_14_feature_range_and_missingness.csv`.
+
+Run `RUN_REFERENCE_VALIDATION.cmd` to recalculate all fourteen output checksums
+without the source databases.

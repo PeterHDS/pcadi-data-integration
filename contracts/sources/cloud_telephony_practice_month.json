@@ -2,6 +2,7 @@
   "dataset": "CBT",
   "filename": "cloud_telephony_practice_month.csv",
   "grain": ["practice_code_standardised", "reporting_month"],
+  "notes": "answered_calls must contain the validated CBT003 answered-call measure used by the public outcome matrix; it is not an automatic alias for CBT007.",
   "columns": {
     "practice_code_standardised": {"type": "text", "nullable": false},
     "reporting_month": {"type": "month", "nullable": false},

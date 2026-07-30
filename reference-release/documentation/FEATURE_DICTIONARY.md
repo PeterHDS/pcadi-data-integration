@@ -12,11 +12,16 @@ The practice identifier accompanies the matrix for traceability and is not a mod
 | `gpad_face_to_face_share` | Face-to-face share | Annual face-to-face / annual GPAD total | Proportion, 0-1 | Recorded/mapped mode may differ from actual care setting |
 | `gpad_telephone_share` | Telephone share | Annual telephone / annual GPAD total | Proportion, 0-1 | Not all telephone contact; local list recording varies |
 | `gpad_same_day_share` | Same-day booking share | Annual exact same-day band / annual GPAD total | Proportion, 0-1 | A booking interval does not independently measure service quality |
-| `gpad_1_to_7_days_share` | One-to-seven-day booking share | Separately calculated 1-day share plus 2-to-7-day share | Proportion, 0-1 | Excludes same day; affected by urgency, availability and patient choice |
+| `gpad_1_day_share` | Next-calendar-day booking share | Annual exact 1 Day band / annual GPAD total | Proportion, 0-1 | Measures recorded booking-to-appointment elapsed time, not when access was first sought |
+| `gpad_2_to_7_days_share` | Two-to-seven-day booking share | Annual exact 2 to 7 Days band / annual GPAD total | Proportion, 0-1 | Affected by urgency, availability and patient choice; not independently access quality |
 | `gpad_8_to_14_days_share` | Eight-to-fourteen-day booking share | Annual 8-14-day band / annual GPAD total | Proportion, 0-1 | Does not measure time spent trying to contact the practice |
 | `gpad_over_14_days_share` | Over-fourteen-day booking share | Annual 15-21 + 22-28 + >28-day bands / annual GPAD total | Proportion, 0-1 | Planned/repeat appointments may be booked far ahead |
 | `ocs_mean_absolute_monthly_rate_change` | Mean absolute monthly change in OCS rate | Mean of 11 adjacent absolute monthly OCS-rate differences | Non-negative rate-point change | Reflects recording, availability and seasonality as well as activity |
 | `gpad_mean_absolute_monthly_rate_change` | Mean absolute monthly change in GPAD rate | Mean of 11 adjacent absolute monthly GPAD-rate differences | Non-negative rate-point change | Not workload or demand volatility alone |
+
+The detailed annual audit table also records
+`gpad_days_1_to_7_audit_share`, calculated as the sum of the two exact shares.
+It is not a modelling feature and does not appear in any authoritative matrix.
 
 ## Missing-value and eligibility rule
 
@@ -25,4 +30,3 @@ No feature is imputed. A zero reported in a present record is retained. An undef
 ## Interpretive boundary
 
 Online submission activity does not independently establish improved access. Booking intervals do not independently measure service quality. GPAD is not a measure of total practice workload. Subsequent clustering can describe statistical similarity in these recorded features but cannot label a cluster as intrinsically good or bad without separate evidence and interpretation.
-

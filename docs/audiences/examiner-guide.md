@@ -32,10 +32,11 @@ contains:
 
 - 6,067 rows, with exactly one row per practice;
 - one standardised practice identifier retained for traceability;
-- 13 complete numerical modelling features;
+- 14 complete numerical modelling features;
 - zero duplicate or blank identifiers;
 - zero missing, non-numeric or non-finite modelling values; and
-- SHA-256 `97B5EDA02117F14250D712E5F265E465E165725340D415B81178E78931011444`.
+- separate GPAD 1-day and 2-to-7-day shares;
+- SHA-256 `C50B14AA191C54C29201DC9909E138395C1A2AEA7F596E8CF6B02F43A6DD7EBF`.
 
 The practice identifier is not a modelling feature. The CBT matrices are
 smaller sensitivity-analysis cohorts and do not replace this primary national
@@ -59,3 +60,7 @@ and the deterministic file fingerprint is recorded in
 - a frozen April 2025-March 2026 evidence release.
 
 Clustering is deliberately outside this repository.
+
+The [cohort-flow figure](../architecture/COHORT_FLOW.md) distinguishes the
+6,067-practice national population from the 3,020 and 1,456-practice CBT
+evidence-availability cohorts.

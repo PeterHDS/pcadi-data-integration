@@ -9,7 +9,7 @@ its ZIP. No third-party Python packages are required.
 
 Double-click `RUN_DEMO.cmd`. It creates deterministic synthetic data, executes
 the configurable SQL and writes validation evidence under `work/`. No official
-NHS files are needed. A successful run reports 12 validation passes and zero
+NHS files are needed. A successful run reports 16 validation passes and zero
 failures.
 
 ## Integrate a chosen observation period
@@ -40,8 +40,8 @@ exactly twelve complete months.
 
 Run `RUN_REFERENCE_VALIDATION.cmd`. It verifies the frozen April 2025 to March
 2026 output checksums without rebuilding the large databases. On a clean
-checkout, the command downloads and verifies the pinned 36.2 MB asset containing
-the seven release-only practice-month CSVs before checking all fourteen outputs.
+checkout of v1.0.0, the command downloads and verifies the pinned 40.7 MB
+dissertation reference archive before checking all fourteen outputs.
 Use
 `RUN_REFERENCE_BUILD.cmd` only when the 21 exact source CSVs are available and
 a complete raw-source reconstruction is required.
@@ -56,3 +56,12 @@ Different joins retain different practice-month populations. Use the
 [analytical design guide](docs/analytical-designs/README.md) to move from a
 question to the appropriate table, and check the
 [source catalogue](docs/SOURCE_CATALOGUE.md) before interpreting its measures.
+
+## Inspect the fixed matrices
+
+The national matrix contains 6,067 practices and fourteen numerical features.
+The CBT inbound and outcome-complete matrices contain 3,020 practices with
+seventeen features and 1,456 practices with twenty-one raw features.
+
+Start with the [cohort flow](docs/architecture/COHORT_FLOW.md), then run
+`RUN_REFERENCE_VALIDATION.cmd` to check the exact schemas and SHA-256 hashes.

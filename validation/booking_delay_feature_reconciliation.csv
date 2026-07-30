@@ -1,0 +1,2 @@
+practices,median_1_day_share,correlation_1_day_vs_2_to_7_days,median_one_day_contribution,p05_one_day_contribution,p95_one_day_contribution,maximum_absolute_difference,mean_absolute_difference,exact_matches,exact_match_percentage,differences_beyond_tolerance,floating_point_tolerance
+6067,0.07012922728799477,0.49621166603237254,0.28409026317285285,0.19843702114618447,0.430289299407459,0.0,0.0,6067,100.0,0,1e-12

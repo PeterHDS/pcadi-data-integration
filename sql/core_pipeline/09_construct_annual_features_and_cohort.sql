@@ -216,7 +216,7 @@ SELECT
         1.0 * SUM(gpad_1_day) / NULLIF(SUM(gpad_total_appointments), 0)
     ) + (
         1.0 * SUM(gpad_2_to_7_days) / NULLIF(SUM(gpad_total_appointments), 0)
-    ) AS gpad_1_to_7_days_share,
+    ) AS gpad_days_1_to_7_audit_share,
     1.0 * SUM(gpad_8_to_14_days) / NULLIF(SUM(gpad_total_appointments), 0) AS gpad_8_to_14_days_share,
     1.0 * (SUM(gpad_same_day) + SUM(gpad_1_day) + SUM(gpad_2_to_7_days))
         / NULLIF(SUM(gpad_total_appointments), 0) AS gpad_within_7_days_share,
@@ -311,7 +311,7 @@ SELECT
     g.gpad_same_day_share,
     g.gpad_1_day_share,
     g.gpad_2_to_7_days_share,
-    g.gpad_1_to_7_days_share,
+    g.gpad_days_1_to_7_audit_share,
     g.gpad_8_to_14_days_share,
     g.gpad_within_7_days_share,
     g.gpad_over_14_days_share,
@@ -352,7 +352,8 @@ WHERE ocs_annual_total_submissions IS NULL
    OR gpad_face_to_face_share IS NULL
    OR gpad_telephone_share IS NULL
    OR gpad_same_day_share IS NULL
-   OR gpad_1_to_7_days_share IS NULL
+   OR gpad_1_day_share IS NULL
+   OR gpad_2_to_7_days_share IS NULL
    OR gpad_8_to_14_days_share IS NULL
    OR gpad_over_14_days_share IS NULL
    OR gpad_mean_absolute_monthly_rate_change IS NULL;

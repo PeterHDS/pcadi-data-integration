@@ -32,8 +32,18 @@ repository outputs can be validated from their checksums without rebuilding the
 large databases. A complete rebuild additionally requires the exact official
 files listed in the manifests.
 
-Seven complete practice-month CSVs are staged locally as the separate GitHub
-Release asset `NHS_SQL_PIPELINE_REFERENCE_PRACTICE_MONTH_OUTPUTS.zip` so the Git
-history remains compact. Their individual checksums remain in the output
-manifest. Extract the asset into `outputs/` before running full reference-output
-validation on a fresh clone.
+The fourteen complete reference CSVs are packaged as the v1.0.0 dissertation
+reference release asset `PCADI_DISSERTATION_REFERENCE_OUTPUTS.zip`. The archive
+includes the seven large
+practice-month tables omitted from Git history and the seven smaller annual,
+modelling and temporal outputs tracked in the repository. The asset and every
+contained file have locked checksums in
+`validation/release_asset_manifest.csv`. After v1.0.0 is published, the
+reference validator can restore missing files without overwriting files that
+are already present.
+
+During pull-request review, clean-clone validation can restore only the seven
+practice-month files from the temporary published reference archive. That
+fallback is permitted only when every missing filename, byte count and SHA-256
+checksum exactly matches the dissertation reference manifest. The three annual
+matrices remain tracked in Git and are never supplied by the fallback archive.
