@@ -1,8 +1,8 @@
 # Scenario 7, 7A, 7B and 7C OCS other/unknown lineage audit
 
-Audit date: 19 July 2026  
-Mode: read-only forensic review  
-Primary period: April 2025 to March 2026  
+Audit date: 19 July 2026
+Mode: read-only forensic review
+Primary period: April 2025 to March 2026
 Primary matrix: `booking_delay_correction/04_OUTPUTS/primary_practice_access_clustering_matrix.csv`
 
 ## A. Executive verdict
