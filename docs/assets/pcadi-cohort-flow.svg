@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
+  <title id="title">PCADI annual cohort flow</title>
+  <desc id="desc">Annual OCS and GPAD practices are assessed for completeness. Six thousand one hundred and thirty pass source and denominator rules, sixty-three are excluded by the final activity rule, six thousand sixty-seven enter the national matrix, three thousand twenty have complete CBT inbound evidence, and one thousand four hundred fifty-six have complete CBT outcome evidence.</desc>
+  <style>
+    .box { fill: #f7fbff; stroke: #174a7e; stroke-width: 2; rx: 14; }
+    .core { fill: #eef8f1; stroke: #26734d; stroke-width: 3; rx: 14; }
+    .restricted { fill: #fff8e8; stroke: #9a6812; stroke-width: 2; rx: 14; }
+    .text { font: 600 19px Arial, sans-serif; fill: #16202a; text-anchor: middle; }
+    .small { font: 15px Arial, sans-serif; fill: #344454; text-anchor: middle; }
+    .arrow { stroke: #52677a; stroke-width: 3; fill: none; marker-end: url(#head); }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#52677a"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="520" fill="#ffffff"/>
+  <rect class="box" x="45" y="45" width="250" height="100"/>
+  <text class="text" x="170" y="82">6,210 annual OCS</text>
+  <text class="small" x="170" y="113">observed practices</text>
+  <rect class="box" x="45" y="185" width="250" height="100"/>
+  <text class="text" x="170" y="222">6,184 annual GPAD</text>
+  <text class="small" x="170" y="253">observed practices</text>
+
+  <rect class="box" x="375" y="115" width="270" height="110"/>
+  <text class="text" x="510" y="155">6,130 eligible practices</text>
+  <text class="small" x="510" y="185">complete sources and denominators</text>
+
+  <rect class="core" x="730" y="115" width="300" height="110"/>
+  <text class="text" x="880" y="155">6,067 national profiles</text>
+  <text class="small" x="880" y="185">14 numerical features</text>
+
+  <rect class="restricted" x="730" y="285" width="300" height="90"/>
+  <text class="text" x="880" y="322">3,020 CBT inbound</text>
+  <text class="small" x="880" y="350">17 numerical features</text>
+
+  <rect class="restricted" x="730" y="415" width="300" height="90"/>
+  <text class="text" x="880" y="452">1,456 CBT outcomes</text>
+  <text class="small" x="880" y="480">21 raw numerical features</text>
+
+  <path class="arrow" d="M295 95 C335 95 335 145 375 145"/>
+  <path class="arrow" d="M295 235 C335 235 335 195 375 195"/>
+  <path class="arrow" d="M645 170 H730"/>
+  <text class="small" x="688" y="151">63 final-rule exclusions</text>
+  <path class="arrow" d="M880 225 V285"/>
+  <path class="arrow" d="M880 375 V415"/>
+</svg>
