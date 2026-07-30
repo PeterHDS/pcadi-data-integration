@@ -2,9 +2,11 @@
 
 ## 1. Begin with the question
 
-Check `docs/SOURCE_CATALOGUE.md`, then choose the analytical design in
-`docs/analytical-designs/README.md`. Broad coverage, matched-source comparison
-and annual profiles retain different populations and are not interchangeable.
+Check the [source catalogue](../SOURCE_CATALOGUE.md), then choose the
+[analytical design](../analytical-designs/README.md). Broad coverage,
+matched-source comparison and annual profiles retain different populations and
+are not interchangeable. The [join guide](../HOW_THE_JOINS_WORK.md) states the
+grain, key and retained population before each output is built.
 
 ## 2. Configure the observation period
 
@@ -23,8 +25,10 @@ when an exactly twelve-month annual profile is required.
 
 ## 3. Obtain official data
 
-Run `data-checklist`, visit the NHS England pages and retain the CSV/ZIP,
-metadata and supporting information. Do not rely on the filename alone.
+Run `data-checklist`, follow the [official NHS data
+guide](../get-official-nhs-data/README.md), and retain the CSV/ZIP, metadata and
+supporting information. Record the publication page, observation months,
+member path and checksum. Do not rely on the filename alone.
 
 ## 4. Establish vintage ownership
 
@@ -44,3 +48,10 @@ Run the pipeline. Do not use an output if any validation row fails. Absence of a
 source row is not zero activity. A configuration of any length produces
 practice-month outputs; the optional annual product requires exactly twelve
 complete months and an explicit request in the configuration.
+
+For the fixed dissertation release, compare the generated interface with the
+[output contract](../../contracts/outputs/README.md) and the
+[machine-readable join gate](../../validation/pcadi_v2_join_design_gate.csv).
+The national annual modelling table contains one traceability identifier and
+fourteen numerical features. The CBT restricted cohorts inherit those fourteen
+values unchanged.

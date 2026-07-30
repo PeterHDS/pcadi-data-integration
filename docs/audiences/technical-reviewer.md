@@ -19,6 +19,23 @@ Key engineering controls include:
 - synthetic CI with no external data dependency;
 - frozen reference checksums.
 
+The release-level contract gates assert:
+
+- 6,067 rows by 15 total columns for the national matrix;
+- 3,020 rows by 18 total columns for the CBT inbound matrix;
+- 1,456 rows by 22 total columns for the raw CBT outcome matrix;
+- exact column order and deterministic practice ordering;
+- no blank, duplicate, missing, non-numeric or non-finite values;
+- valid share and non-negative rate ranges;
+- exact cohort nesting;
+- exact fourteen-field inheritance into the inbound matrix;
+- exact seventeen-field inheritance into the outcome matrix.
+
 The Python runner uses only the standard library. The executable SQL targets
 SQLite; the analytical design is portable but dialect changes are required for
 other database engines.
+
+Use the [source-of-truth audit](../audits/PCADI_V2_SOURCE_OF_TRUTH.md),
+[dependency graph](../audits/PCADI_V2_DEPENDENCY_GRAPH.md) and
+[`validation/pcadi_v2_repository_rebuild_gate.csv`](../../validation/pcadi_v2_repository_rebuild_gate.csv)
+for release review.

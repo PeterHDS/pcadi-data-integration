@@ -15,10 +15,11 @@ python automation/pipeline_cli.py validate-reference `
 
 This recalculates SHA-256 checksums for the fourteen fixed outputs and compares
 them with `validation/output_register_and_checksums.csv`. It does not require a
-source database. On a fresh clone, `--restore-missing` downloads the pinned
-36.2 MB release asset, verifies the asset checksum, restores only the seven
-absent practice-month CSVs and verifies every restored file before validation.
-Existing output files are not overwritten.
+source database. On a fresh clone of v2.0.0, `--restore-missing` downloads the
+pinned `PCADI_V2_REFERENCE_OUTPUTS.zip` asset, verifies its 40,656,898-byte
+archive and SHA-256 checksum, restores only absent reference CSVs and verifies
+every restored file before validation. Existing output files are not
+overwritten.
 
 ## Rebuild the primary annual OCS-GPAD matrix from source CSVs
 
@@ -32,7 +33,7 @@ The runner:
 1. checks all 21 source hashes, headers and row counts;
 2. imports every field as text into a new ignored SQLite database;
 3. executes the twelve ordered SQL stages in `sql/core_pipeline/`;
-4. runs 36 mandatory validations plus database integrity checks; and
+4. runs 39 mandatory validations plus database integrity checks; and
 5. compares all 6,067 canonical feature fingerprints with the expected
    fingerprint evidence.
 
