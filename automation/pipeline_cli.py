@@ -495,7 +495,7 @@ def retrieve_outputs_from_asset(
     with zipfile.ZipFile(archive_path) as archive:
         members = {member.filename: member for member in archive.infolist() if not member.is_dir()}
         for filename in missing:
-            member = members.get(filename)
+            member = members.get(filename) or members.get(f"outputs/{filename}")
             if member is None:
                 raise ValueError(f"Expected reference output is absent from the verified asset: {filename}")
             target = ROOT / "outputs" / filename
