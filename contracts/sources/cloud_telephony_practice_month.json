@@ -1,0 +1,17 @@
+{
+  "dataset": "CBT",
+  "filename": "cloud_telephony_practice_month.csv",
+  "grain": ["practice_code_standardised", "reporting_month"],
+  "notes": "answered_calls must contain the validated CBT003 answered-call measure used by the public outcome matrix; it is not an automatic alias for CBT007.",
+  "columns": {
+    "practice_code_standardised": {"type": "text", "nullable": false},
+    "reporting_month": {"type": "month", "nullable": false},
+    "inbound_calls": {"type": "number", "nullable": true},
+    "answered_calls": {"type": "number", "nullable": true},
+    "missed_calls": {"type": "number", "nullable": true},
+    "ivr_exits": {"type": "number", "nullable": true},
+    "callback_requests": {"type": "number", "nullable": true},
+    "mapping_valid": {"type": "integer", "nullable": true},
+    "integrity_gap_flag": {"type": "integer", "nullable": true}
+  }
+}

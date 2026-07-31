@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="930" viewBox="0 0 1400 930" role="img" aria-labelledby="title description">
+<title id="title">April 2025 to March 2026 reference cohorts</title>
+<desc id="description">Annual OCS-GPAD eligibility with nested CBT evidence availability</desc>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#1F6F8B"/></marker>
+</defs>
+<rect width="1400" height="930" fill="#F7FAFC"/>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700" fill="#123047"><tspan x="700.0" y="70.0">April 2025 to March 2026 reference cohorts</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="400" fill="#52646F"><tspan x="700.0" y="116.0">Annual OCS-GPAD eligibility with nested CBT evidence availability</tspan></text>
+<line x1="700" y1="237" x2="700" y2="290" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<line x1="700" y1="750" x2="700" y2="800" stroke="#1F6F8B" stroke-width="5" marker-end="url(#arrow)"/>
+<rect x="160" y="145" width="1080" height="92" rx="18" fill="#E8F1F5" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700.0" y="200.8">Validated OCS and GPAD practice-month reporting</tspan></text>
+<rect x="230" y="290" width="940" height="460" rx="24" fill="#DDF3EE" stroke="#2A9D8F" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="700" fill="#123047"><tspan x="700.0" y="530.9"></tspan></text>
+<rect x="330" y="420" width="740" height="260" rx="24" fill="#E8F1F5" stroke="#1F6F8B" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700.0" y="559.8"></tspan></text>
+<rect x="450" y="535" width="500" height="105" rx="22" fill="#FFF2D6" stroke="#E5A73C" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#1D2A32"><tspan x="700.0" y="580.8">1,456 practices with complete</tspan><tspan x="700.0" y="611.8">supported CBT outcomes</tspan></text>
+<rect x="255" y="800" width="890" height="82" rx="18" fill="#123047" stroke="#123047" stroke-width="3"/><text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#FFFFFF"><tspan x="700.0" y="834.2">Nested evidence-availability cohorts</tspan><tspan x="700.0" y="865.2">Each cohort follows its documented source contract</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="700" fill="#123047"><tspan x="700" y="340.0">6,067 practices in the national annual matrix</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="400" fill="#52646F"><tspan x="700" y="382.0">12 complete eligible matched months</tspan></text>
+<text text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#123047"><tspan x="700" y="490.0">3,020 practices with valid CBT inbound evidence</tspan></text>
+</svg>

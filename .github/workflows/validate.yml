@@ -1,0 +1,20 @@
+name: validate-pcadi-pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  deterministic-validation:
+    runs-on: windows-latest
+    env:
+      PCADI_REFERENCE_ASSET_URL: ${{ vars.PCADI_REFERENCE_ASSET_URL }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Run synthetic and reference tests
+        run: python tests/run_tests.py
+      - name: Audit public documentation and contracts
+        run: python automation/audit_public_repository.py

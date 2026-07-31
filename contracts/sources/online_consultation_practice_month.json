@@ -1,0 +1,16 @@
+{
+  "dataset": "OCS",
+  "filename": "online_consultation_practice_month.csv",
+  "grain": ["practice_code_standardised", "reporting_month"],
+  "columns": {
+    "practice_code_standardised": {"type": "text", "nullable": false},
+    "reporting_month": {"type": "month", "nullable": false},
+    "registered_patients": {"type": "number", "nullable": true},
+    "total_submissions": {"type": "number", "nullable": true},
+    "clinical_submissions": {"type": "number", "nullable": true},
+    "administrative_submissions": {"type": "number", "nullable": true},
+    "other_unknown_submissions": {"type": "number", "nullable": true},
+    "participation_flag": {"type": "integer", "nullable": true},
+    "unknown_supplier_flag": {"type": "integer", "nullable": true}
+  }
+}

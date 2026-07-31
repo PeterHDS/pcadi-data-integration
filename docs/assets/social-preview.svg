@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">PCADI social preview</title>
+  <desc id="description">Primary Care Activity Data Integration for OCS, GPAD, CBT and registered-patient data.</desc>
+  <rect width="1280" height="640" fill="#123047"/>
+  <rect x="68" y="62" width="1144" height="516" rx="36" fill="#163B54" stroke="#2A9D8F" stroke-width="3"/>
+  <rect x="68" y="62" width="20" height="516" fill="#2A9D8F"/>
+  <text x="145" y="205" font-family="Segoe UI, Arial, sans-serif" font-size="88" font-weight="700" fill="#FFFFFF">PCADI</text>
+  <text x="150" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="#DDF3EE">Primary Care Activity Data Integration</text>
+  <text x="150" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#FFFFFF">OCS + GPAD + CBT + registered-patient data</text>
+  <line x1="150" y1="400" x2="1125" y2="400" stroke="#5CA6B4" stroke-width="2"/>
+  <text x="150" y="480" font-family="Segoe UI, Arial, sans-serif" font-size="27" fill="#DDF3EE">Practice-month integration | Auditable joins | Reusable periods</text>
+</svg>

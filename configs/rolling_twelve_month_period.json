@@ -1,0 +1,8 @@
+{
+  "analysis_start_month": "2025-07",
+  "analysis_end_month": "2026-06",
+  "expected_months": 12,
+  "required_sources": ["OCS", "GPAD", "CBT"],
+  "annual_features": true,
+  "description": "Runnable rolling-window example for twelve consecutive observation months. Generate a new configuration for another window."
+}
