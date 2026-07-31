@@ -6,7 +6,7 @@
 
 PCADI prepares NHS England primary-care activity publications for reproducible analysis. The SQL and Python workflow aligns online-consultation, appointment, telephony and registered-patient data at practice-month level, preserves source coverage and missingness, and produces question-specific analytical tables with complete validation evidence.
 
-The repository includes a verified April 2025 to March 2026 reference application and configurable synthetic demonstrations for other observation lengths. Each output records its source population, join logic, grain and interpretation scope.
+This repository includes a verified April 2025 to March 2026 reference application and configurable synthetic demonstrations for other observation lengths. Each output records its source population, join logic, grain and interpretation scope.
 
 ```powershell
 git clone https://github.com/PeterHDS/pcadi-data-integration.git
