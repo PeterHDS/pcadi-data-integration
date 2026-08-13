@@ -12,7 +12,7 @@ This document identifies the authoritative reference matrices and the dependency
 
 The machine-readable output register is [`validation/authoritative_output_manifest.csv`](../../validation/authoritative_output_manifest.csv). The public source and SQL authority register is [`validation/authoritative_source_register.csv`](../../validation/authoritative_source_register.csv).
 
-## Source-to-output dependency
+## Portable integration design
 
 ```text
 official NHS England publication resources
@@ -29,24 +29,40 @@ one OCS, GPAD or CBT row per practice and reporting month
     v
 coverage-preserving union practice-month spine
     |
-    +--> purpose-led practice-month analytical tables
+    `--> purpose-led practice-month analytical tables
+```
+
+The portable design uses the union spine as the coverage and provenance surface from which source-led and matched practice-month populations can be selected. Its row count is governed by the distinct union of prepared source keys.
+
+## Verified reference lineage
+
+```text
+selected OCS and GPAD raw-source evidence
     |
     v
-twelve-month OCS-GPAD eligibility and annual aggregation
+validated OCS and GPAD practice-month tables
+    |
+    +--> month-matched registered-patient denominator
+    |
+    v
+matched OCS-GPAD-denominator practice-month panel
+    |
+    v
+twelve-month eligibility and annual aggregation
     |
     v
 14-feature national matrix
     |
-    +--> 17-feature CBT inbound restricted cohort
-    |         |
-    |         v
-    |     exact 14-field inheritance gate
+    +--> attach validated prepared CBT inbound evidence
+    |         `--> 17-feature CBT inbound restricted cohort
+    |                    `--> exact 14-field inheritance gate
     |
-    +--> 21-feature CBT outcome-complete restricted cohort
-              |
-              v
-          exact 17-field inheritance gate
+    `--> attach validated prepared CBT outcome evidence
+              `--> 21-feature CBT outcome-complete restricted cohort
+                         `--> exact 17-field inheritance gate
 ```
+
+The coverage union spine is not the physical parent of the selected national annual matrix in the verified April 2025 to March 2026 implementation. Both structures use the same grain and source-governance principles, but the national matrix is constructed separately from the validated OCS, GPAD and registered-patient source tables. CBT enters the restricted annual contracts through a separately validated prepared-evidence layer; the 21-file national raw-source build does not reconstruct CBT from raw archives.
 
 ## Annual calculations
 

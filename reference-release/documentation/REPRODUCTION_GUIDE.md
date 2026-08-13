@@ -16,7 +16,7 @@ The command checks 14 outputs against `validation/output_register_and_checksums.
 
 ## Rebuild the primary annual OCS-GPAD matrix
 
-Obtain the exact 21 official CSVs listed in `reference-release/input_manifest.csv`. Place each file at its `recommended_relative_path`, preserving its bytes, filename and header. Then double-click `RUN_REFERENCE_BUILD.cmd`, or run its documented Python command.
+Obtain the exact 21 official CSVs listed in `reference-release/input_manifest.csv`. These are the OCS, GPAD and mapping inputs for the national annual OCS-GPAD build. Place each file at its `recommended_relative_path`, preserving its bytes, filename and header. Then double-click `RUN_REFERENCE_BUILD.cmd`, or run its documented Python command.
 
 The runner:
 
@@ -30,7 +30,7 @@ The build writes under `work/reference-build/`, which is excluded from Git. It d
 
 ## Scope
 
-The full source build independently reconstructs the primary annual OCS-GPAD matrix. The reference application also contains CBT sensitivity and temporal outputs whose SQL, manifests and checksums are retained separately. Rebuilding those outputs requires their own official source files.
+The raw-source build independently reconstructs the primary annual OCS-GPAD matrix. The reference application also contains CBT sensitivity and temporal outputs whose SQL, selected-release manifests, prepared-evidence contracts and checksums are retained separately. Rebuilding CBT directly from raw official archives requires its own acquisition, account-to-practice mapping, integrity and reconciliation workflow beyond the 21-file command.
 
 - The practice identifier is retained for traceability and is not a feature.
 - OCS, GPAD and CBT activity counts are never added together.

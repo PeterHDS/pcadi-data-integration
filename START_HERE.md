@@ -54,11 +54,11 @@ python automation/pipeline_cli.py validate-reference `
   --output work/reference_validation.csv
 ```
 
-The command retrieves absent release-only CSVs from the period-labelled reference asset, verifies the archive and checks all fourteen registered outputs. `RUN_REFERENCE_BUILD.cmd` provides the full source reconstruction route when the exact twenty-one selected source CSVs are available.
+The command retrieves absent release-only CSVs from the period-labelled reference asset, verifies the archive and checks all fourteen registered outputs. `RUN_REFERENCE_BUILD.cmd` reconstructs the national annual OCS-GPAD matrix when the exact twenty-one registered OCS, GPAD and mapping CSVs are available.
 
 ## Reader guides
 
-- [Examiner or academic reviewer](docs/audiences/examiner-guide.md)
+- [Research or reference-output reviewer](docs/audiences/reference-inspection-guide.md)
 - [NHS or ICB analyst](docs/audiences/analyst-guide.md)
 - [Learner](docs/audiences/learner-tutorial.md)
 - [Technical reviewer](docs/audiences/technical-reviewer.md)

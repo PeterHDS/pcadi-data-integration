@@ -173,7 +173,7 @@ The matrices support clustering, descriptive analysis and linkage to independent
 
 | Reader | Guide |
 |---|---|
-| Examiner or academic reviewer | [Research and reference-output inspection](docs/audiences/examiner-guide.md) |
+| Research reviewer | [Reference-output inspection](docs/audiences/reference-inspection-guide.md) |
 | NHS or ICB analyst | [Build and select a period-specific output](docs/audiences/analyst-guide.md) |
 | Learner | [Guided synthetic tutorial](docs/audiences/learner-tutorial.md) |
 | Technical reviewer | [Contracts, tests and integrity gates](docs/audiences/technical-reviewer.md) |

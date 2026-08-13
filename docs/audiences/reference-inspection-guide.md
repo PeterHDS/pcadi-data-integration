@@ -1,6 +1,6 @@
-# Examiner and academic reviewer guide
+# Reference-output inspection guide
 
-This guide explains how the April 2025 to March 2026 reference application supports inspection of the associated academic work. PCADI itself is a reusable analytical pipeline.
+This guide provides a concise route through the April 2025 to March 2026 reference application. It connects the published analytical contracts to their lineage, validation and reproducible build boundary.
 
 ## Short inspection route
 
@@ -26,9 +26,11 @@ The compact check confirms:
 
 Complete fingerprints are in the [authoritative output manifest](../../validation/authoritative_output_manifest.csv).
 
-## Full reconstruction
+## Raw-source reconstruction boundary
 
-`RUN_REFERENCE_BUILD.cmd` recreates the source-to-output integration only when the 21 exact selected source CSVs are available. Raw NHS downloads and the large working database are not stored in Git. The [reproduction guide](../../reference-release/documentation/REPRODUCTION_GUIDE.md) states the required inputs and sequence.
+`RUN_REFERENCE_BUILD.cmd` recreates the national annual OCS-GPAD matrix when the 21 exact registered OCS, GPAD and mapping CSVs are available. Raw NHS downloads and the working database are not stored in Git. The [reproduction guide](../../reference-release/documentation/REPRODUCTION_GUIDE.md) states the required inputs and sequence.
+
+The restricted CBT matrices use separately validated prepared CBT evidence. The broader selected-release manifests retain CBT publication ownership and integrity exclusions, but the 21-file command is not a complete raw CBT reconstruction.
 
 ## Boundary
 

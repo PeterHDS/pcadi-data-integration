@@ -182,7 +182,7 @@ def main() -> int:
     writing_hits: dict[str, list[str]] = {name: [] for name in PROHIBITED_PUBLIC_PATTERNS}
     local_path_hits: list[str] = []
     academic_hits: list[str] = []
-    allowed_academic = {"docs/research-context.md", "docs/audiences/examiner-guide.md"}
+    allowed_academic = {"docs/research-context.md"}
     public_text = [path for path in files if path.suffix.lower() in {".md", ".html", ".svg", ".cff"}]
     for path in public_text:
         relative = path.relative_to(ROOT).as_posix()

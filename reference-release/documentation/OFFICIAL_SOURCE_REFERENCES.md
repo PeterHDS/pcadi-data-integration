@@ -29,7 +29,7 @@ Accessed 15 July 2026. These primary sources support interpretation and reproduc
 
 ### Reproducibility practice applied
 
-This package supplies landing and quick-start documentation, explicit prerequisites, a 21-file manifest, complete annotated SQL, file-relationship and cohort documentation, source citations, checksums and dependency/version records.
+For the national annual OCS-GPAD build, this package supplies landing and quick-start documentation, explicit prerequisites, a 21-file manifest, complete annotated SQL, file-relationship and cohort documentation, source citations, checksums and dependency/version records. The wider CBT evidence is registered separately through selected-release manifests, prepared contracts and output-validation records.
 
 ## SQLite
 

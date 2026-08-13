@@ -381,10 +381,10 @@ def main() -> None:
         expected_url = f"https://digital.nhs.uk/data-and-information/publications/statistical/{series_path}"
         assert expected_url in acquisition_guide, f"Official NHS England release index missing: {expected_url}"
 
-    examiner_guide = (ROOT / "docs" / "audiences" / "examiner-guide.md").read_text(encoding="utf-8")
-    assert "../../outputs/primary_practice_access_clustering_matrix.csv" in examiner_guide
-    assert "../../validation/authoritative_output_manifest.csv" in examiner_guide
-    assert "6,067" in examiner_guide and "14 complete numerical modelling features" in examiner_guide
+    inspection_guide = (ROOT / "docs" / "audiences" / "reference-inspection-guide.md").read_text(encoding="utf-8")
+    assert "../../outputs/primary_practice_access_clustering_matrix.csv" in inspection_guide
+    assert "../../validation/authoritative_output_manifest.csv" in inspection_guide
+    assert "6,067" in inspection_guide and "14 complete numerical modelling features" in inspection_guide
 
     result = {
         "status": "PASS",

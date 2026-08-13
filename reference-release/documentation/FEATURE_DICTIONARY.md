@@ -6,7 +6,7 @@ The practice identifier accompanies the matrix for traceability and is not a mod
 |---|---|---|---|---|
 | `ocs_submissions_per_1000_patient_months` | Recorded online submissions per 1,000 registered patient-months | `1000 * annual OCS total / sum(12 monthly registered patients)` | Non-negative rate | Not all practice demand; supplier and system availability affect coverage |
 | `ocs_clinical_share` | Clinical share of online submissions | Annual clinical / annual OCS total | Proportion, 0-1 | Classification is not patient case mix or clinical need |
-| `ocs_administrative_share` | Administrative share of online submissions | Annual administrative / annual OCS total | Proportion, 0-1 | Other/unknown remains a residual; not administrative workload |
+| `ocs_administrative_share` | Administrative share of online submissions | Annual administrative / annual OCS total | Proportion, 0-1 | Other/unknown is an explicitly published parallel category; the narrow matrix retains clinical and administrative shares, so its share is recoverable as `1 - clinical share - administrative share` |
 | `gpad_appointments_per_1000_patient_months` | Recorded appointments per 1,000 registered patient-months | `1000 * annual GPAD total / sum(12 monthly registered patients)` | Non-negative rate | Represents scheduled/planned activity recorded in participating appointment systems |
 | `gpad_dna_share` | Did-not-attend share | Annual DNA / annual GPAD total | Proportion, 0-1 | Recording and unknown status affect interpretation; not a quality score |
 | `gpad_face_to_face_share` | Face-to-face share | Annual face-to-face / annual GPAD total | Proportion, 0-1 | Recorded/mapped mode may differ from actual care setting |

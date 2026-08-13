@@ -1,5 +1,7 @@
 # Data lineage
 
+## National annual OCS-GPAD raw-source build
+
 ```text
 21 frozen raw monthly/component CSV files
     |-- OCS evidence series (2 regional files)
@@ -45,6 +47,25 @@ Standardised OCS / GPAD / mapping tables
                          v
  Deterministic CSV export + fresh-reference equivalence
 ```
+
+This physical lineage reconstructs the national 14-feature OCS-GPAD matrix. It is separate from the portable coverage-union design and does not use the union spine as an upstream annual table.
+
+## Restricted CBT evidence lineage
+
+```text
+broader selected-release CBT register
+    |
+    v
+validated prepared CBT practice-month evidence
+    |
+    +--> valid complete inbound evidence
+    |         `--> attach to national parent values -> 17-feature restricted matrix
+    |
+    `--> valid complete supported outcome evidence
+              `--> attach to inbound parent values -> 21-feature restricted matrix
+```
+
+The prepared CBT layer preserves publication ownership, mapping and integrity evidence, including the two excluded source members. The national 21-file manifest does not claim a raw CBT rebuild. The restricted matrices are validated by cohort nesting and exact inheritance of their OCS-GPAD parent features.
 
 ## Join boundary
 

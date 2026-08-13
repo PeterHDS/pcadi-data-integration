@@ -27,7 +27,7 @@ UNION
 SELECT practice_code_standardised, reporting_month FROM cloud_telephony_practice_month;
 ```
 
-This preserves available evidence without turning an absent source row into a zero. The multiplication factor must remain 1.0 because every source is unique on the join key before attachment.
+This preserves available evidence without turning an absent source row into a zero. Relative to the distinct union keys, the multiplication factor must remain 1.0 because every source is unique on the join key before attachment.
 
 ## Source-led tables
 
@@ -35,7 +35,7 @@ An OCS-led table retains every OCS practice-month, then attaches GPAD and CBT wh
 
 ## Matched tables
 
-Matched tables are filtered views of the coverage spine. They do not recalculate activity:
+In the portable logical design, matched tables are filtered views of the coverage spine. They do not recalculate activity:
 
 ```sql
 WHERE has_online_consultation = 1
@@ -43,6 +43,12 @@ WHERE has_online_consultation = 1
 ```
 
 The three-source table additionally requires valid CBT evidence. The CBT-observed comparison uses the same OCS and GPAD values and changes only the eligible population.
+
+## Verified reference implementation
+
+The April 2025 to March 2026 national annual matrix has a separate physical lineage. Validated OCS, GPAD and registered-patient tables are inner-joined at practice-month grain to create the matched monthly panel. Twelve-month eligibility and annual feature construction then operate on that panel. The coverage union spine is valuable coverage evidence but is not an upstream table in this annual branch.
+
+The restricted CBT annual matrices inherit the national OCS-GPAD features and attach separately validated prepared CBT evidence. The 21-file raw-source reconstruction covers the national OCS-GPAD branch only; it does not claim to rebuild raw CBT source archives.
 
 ## Annual profiles
 
@@ -70,8 +76,8 @@ For each table, confirm:
 
 1. the expected grain and unique key;
 2. the retained population rule;
-3. rows equal distinct keys;
-4. the row-multiplication factor is 1.0;
+3. rows equal the distinct keys required by the retained-population rule;
+4. the row-multiplication factor is 1.0 relative to that intended key set;
 5. source totals reconcile before and after attachment;
 6. absence and observed zero remain distinguishable;
 7. the output period matches the configuration.
