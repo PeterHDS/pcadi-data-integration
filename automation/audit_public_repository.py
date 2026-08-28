@@ -256,8 +256,13 @@ def main() -> int:
     add_check(checks, "authoritative_matrices", [item["path"] for item in matrices if item["status"] != "PASS"], matrices=matrices)
 
     citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
-    citation_ok = "cff-version: 1.2.0" in citation and "type: software" in citation and "\nversion:" not in citation and "\ndate-released:" not in citation
-    add_check(checks, "citation_metadata", [] if citation_ok else ["CITATION.cff must remain valid and versionless"])
+    citation_ok = (
+        "cff-version: 1.2.0" in citation
+        and "type: software" in citation
+        and "\nversion:" not in citation
+        and "\ndate-released: 2026-07-31" in citation
+    )
+    add_check(checks, "citation_metadata", [] if citation_ok else ["CITATION.cff must remain versionless and register the reference-release date"])
 
     passes = sum(item["status"] == "PASS" for item in checks)
     failures = len(checks) - passes

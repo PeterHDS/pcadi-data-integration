@@ -326,7 +326,7 @@ def main() -> None:
     assert 'title: "PCADI: Primary Care Activity Data Integration"' in citation
     assert "type: software" in citation
     assert "\nversion:" not in citation
-    assert "\ndate-released:" not in citation
+    assert "\ndate-released: 2026-07-31" in citation
 
     for filename in ("CODE_OF_CONDUCT.md", "CONTRIBUTING.md", "SECURITY.md"):
         assert (ROOT / ".github" / filename).is_file()
